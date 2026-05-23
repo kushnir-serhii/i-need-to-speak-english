@@ -21,9 +21,7 @@ src/
   app/
     (admin)/
       layout.tsx          ← shared layout (sidebar, header, nav)
-      page.tsx            ← dashboard home
-      chat/
-        page.tsx          ← chat interface
+      page.tsx            ← chat interface (home page)
       history/
         page.tsx          ← chat history browser
       settings/
@@ -47,6 +45,7 @@ src/
   lib/
     mongodb.ts            ← Mongoose connection singleton
     openai.ts             ← OpenAI client factory (server-only)
+    systemPrompt.ts       ← Default language-learning system prompt
     db/
       models/
         User.ts           ← Mongoose User model

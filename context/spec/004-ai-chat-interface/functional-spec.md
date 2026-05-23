@@ -1,7 +1,7 @@
 # Functional Specification: AI Chat Interface
 
 - **Roadmap Item:** Phase 2 — AI Chat Interface
-- **Status:** Approved
+- **Status:** Completed
 - **Author:** Serhii Kushnir
 
 ---
@@ -72,30 +72,30 @@ If a message cannot be delivered to the AI (e.g. the connection is interrupted o
 ## 3. Acceptance Criteria
 
 **Empty state**
-- [ ] When the user opens the app for the first time, the conversation thread is empty and the input field is focused and ready.
+- [x] When the user opens the app for the first time, the conversation thread is empty and the input field is focused and ready.
 
 **Message input**
-- [ ] The Send button is disabled when the input field is empty.
-- [ ] Pressing Enter with text in the field submits the message.
-- [ ] Pressing Shift + Enter inserts a new line without submitting.
-- [ ] Clicking the Send button submits the message.
-- [ ] After submitting, the input field clears immediately.
-- [ ] A character counter is visible while typing, showing "X / 1000".
-- [ ] The counter changes to a warning colour when the user is close to the limit.
+- [x] The Send button is disabled when the input field is empty.
+- [x] Pressing Enter with text in the field submits the message.
+- [x] Pressing Shift + Enter inserts a new line without submitting.
+- [x] Clicking the Send button submits the message.
+- [x] After submitting, the input field clears immediately.
+- [x] A character counter is visible while typing, showing "X / 1000".
+- [x] The counter changes to a warning colour when the user is close to the limit.
 
 **Sending and response**
-- [ ] After submitting a message, the user's message appears as a right-aligned bubble in the thread.
-- [ ] A typing indicator (animated dots) appears in the thread while the AI is preparing a response.
-- [ ] The user can type in the input field while the typing indicator is showing.
-- [ ] The typing indicator is replaced by the AI's response, which streams in word by word.
-- [ ] The AI message appears as a left-aligned bubble, visually distinct from the user bubble.
+- [x] After submitting a message, the user's message appears as a right-aligned bubble in the thread.
+- [x] A typing indicator (animated dots) appears in the thread while the AI is preparing a response.
+- [x] The user can type in the input field while the typing indicator is showing.
+- [x] The typing indicator is replaced by the AI's response, which streams in word by word.
+- [x] The AI message appears as a left-aligned bubble, visually distinct from the user bubble.
 
 **Auto-scroll**
-- [ ] The thread automatically scrolls to the bottom when a new message (user or AI) is added.
-- [ ] The thread scrolls to the bottom as each new word streams in from the AI.
+- [x] The thread automatically scrolls to the bottom when a new message (user or AI) is added.
+- [x] The thread scrolls to the bottom as each new word streams in from the AI.
 
 **Error**
-- [ ] If the AI request fails, the typing indicator disappears and a red toast notification appears with "Something went wrong. Please try again."
+- [x] If the AI request fails, the typing indicator disappears and a red toast notification appears with "Something went wrong. Please try again."
 
 ---
 

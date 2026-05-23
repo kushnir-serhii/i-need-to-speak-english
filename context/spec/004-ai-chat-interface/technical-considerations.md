@@ -3,7 +3,7 @@
 # Technical Specification: AI Chat Interface
 
 - **Functional Specification:** [context/spec/004-ai-chat-interface/functional-spec.md](./functional-spec.md)
-- **Status:** Approved
+- **Status:** Completed
 - **Author(s):** Serhii Kushnir
 
 ---

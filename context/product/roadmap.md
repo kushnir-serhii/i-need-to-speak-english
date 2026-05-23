@@ -29,10 +29,10 @@ _The minimal infrastructure that everything else depends on: identity, cost cont
 
 _Once the foundation is solid, deliver the core value: AI-powered text conversation with cost protection._
 
-- [ ] **AI Chat Interface**
-  - [ ] **Text input and streaming response:** Provide a textarea for user messages and stream AI replies into the chat UI in real time.
-  - [ ] **Default system prompt:** Embed a hard-coded, language-learning-focused system prompt that guides the AI to act as a conversation partner.
-  - [ ] **Chat message bubbles:** Display user and AI messages in a clear, scrollable conversation thread.
+- [x] **AI Chat Interface**
+  - [x] **Text input and streaming response:** Provide a textarea for user messages and stream AI replies into the chat UI in real time.
+  - [x] **Default system prompt:** Embed a hard-coded, language-learning-focused system prompt that guides the AI to act as a conversation partner.
+  - [x] **Chat message bubbles:** Display user and AI messages in a clear, scrollable conversation thread.
 
 - [ ] **Usage Control & API Key Modes**
   - [ ] **Default-key mode with daily limits:** Enforce per-user daily limits (request count + token budget) server-side via MongoDB counters before proxying each AI request.

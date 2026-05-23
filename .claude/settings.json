@@ -9,7 +9,10 @@
       "Bash(bash .awos/scripts/create-spec-directory.sh anonymous-access)",
       "mcp__playwright__browser_wait_for",
       "mcp__playwright__browser_snapshot",
-      "mcp__playwright__browser_evaluate"
+      "mcp__playwright__browser_evaluate",
+      "mcp__playwright__browser_take_screenshot",
+      "Bash(Get-ChildItem -Path \"src\" -Recurse -Directory)",
+      "Bash(Select-Object -ExpandProperty FullName)"
     ]
   },
   "extraKnownMarketplaces": {
