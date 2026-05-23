@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(Remove-Item -Path \"c:\\\\Users\\\\serg9\\\\Documents\\\\GitHub\\\\i-need-to-speak-english\\\\src\\\\context\\\\ThemeContext.tsx\" -Force)",
+      "Bash(npm uninstall *)",
+      "Bash(npm install *)",
+      "Bash(npm ls *)",
+      "Bash(bash .awos/scripts/create-spec-directory.sh anonymous-access)",
+      "mcp__playwright__browser_wait_for",
+      "mcp__playwright__browser_snapshot",
+      "mcp__playwright__browser_evaluate"
+    ]
+  },
+  "extraKnownMarketplaces": {
+    "awos-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "provectus/awos"
+      }
+    }
+  }
+}

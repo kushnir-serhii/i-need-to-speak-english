@@ -1,0 +1,70 @@
+'use client';
+
+import { useState } from 'react';
+import { useSettingsStore } from '@/store/useSettingsStore';
+
+interface NamePromptProps {
+  onDone: () => void;
+}
+
+export default function NamePrompt({ onDone }: NamePromptProps) {
+  const [inputValue, setInputValue] = useState('');
+
+  function handleConfirm() {
+    useSettingsStore.getState().setVisitorName(inputValue.trim() || null);
+    useSettingsStore.getState().markNamePromptSeen();
+    onDone();
+  }
+
+  function handleSkip() {
+    useSettingsStore.getState().setVisitorName(null);
+    useSettingsStore.getState().markNamePromptSeen();
+    onDone();
+  }
+
+  function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === 'Enter') {
+      handleConfirm();
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#0D1117] px-4">
+      <div className="flex w-full max-w-[400px] flex-col items-center gap-4">
+        <h1 className="font-[var(--font-inter)] text-2xl font-bold text-[#F0F6FC]">
+          What&apos;s your name?
+        </h1>
+
+        <p className="font-[var(--font-inter)] text-sm font-normal text-[#8B949E]">
+          We&apos;ll use it to greet you.
+        </p>
+
+        <input
+          type="text"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="Your name"
+          className="w-full rounded-md border border-[#30363D] bg-[#161B22] px-4 py-3 text-[#F0F6FC] placeholder-[#8B949E] outline-none focus:border-[#2F81F7] focus:ring-1 focus:ring-[#2F81F7]"
+          autoFocus
+        />
+
+        <button
+          type="button"
+          onClick={handleConfirm}
+          className="w-full rounded-md bg-[#2F81F7] px-4 py-3 font-[var(--font-inter)] font-semibold text-white hover:bg-[#388bfd] active:bg-[#1f6feb]"
+        >
+          Let&apos;s go
+        </button>
+
+        <button
+          type="button"
+          onClick={handleSkip}
+          className="font-[var(--font-inter)] text-sm text-[#8B949E] hover:text-[#F0F6FC]"
+        >
+          Skip
+        </button>
+      </div>
+    </div>
+  );
+}

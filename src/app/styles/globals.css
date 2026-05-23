@@ -21,7 +21,7 @@
 
   html,
   body {
-    @apply bg-bg-main relative z-1 min-h-screen font-[openSans] dark:bg-[#0A0F1A];
+    @apply bg-bg-main relative z-1 min-h-screen font-[--font-inter] dark:bg-[#0A0F1A];
   }
 
 }

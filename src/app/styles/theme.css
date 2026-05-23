@@ -8,8 +8,8 @@
 
 @theme {
     --font-*: initial;
-    --font-family: var(--font-openSans), sans-serif;
-    --font-secondary: var(--font-fixelDisplay), sans-serif;
+    --font-family: var(--font-inter), sans-serif;
+    --font-secondary: var(--font-mono), monospace;
 
     --breakpoint-*: initial;
     --breakpoint-2xs: 375px;

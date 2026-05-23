@@ -1,10 +1,10 @@
 import React from 'react';
-import { useTheme } from '../../context/ThemeContext';
+import { useSettingsStore } from '@/store/useSettingsStore';
 import { IconMoon, IconSun } from '@/assets/icons';
 import { ButtonOrLink } from '@/components/ui';
 
 export const ThemeToggleButton: React.FC = () => {
-  const { toggleTheme, theme } = useTheme();
+  const { toggleTheme, theme } = useSettingsStore();
 
   const isDark = theme === 'dark';
   return (
