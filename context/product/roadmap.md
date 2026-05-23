@@ -34,12 +34,12 @@ _Once the foundation is solid, deliver the core value: AI-powered text conversat
   - [x] **Default system prompt:** Embed a hard-coded, language-learning-focused system prompt that guides the AI to act as a conversation partner.
   - [x] **Chat message bubbles:** Display user and AI messages in a clear, scrollable conversation thread.
 
-- [ ] **Usage Control & API Key Modes**
-  - [ ] **Default-key mode with daily limits:** Enforce per-user daily limits (request count + token budget) server-side via MongoDB counters before proxying each AI request.
-  - [ ] **Daily counter reset:** Reset each user's request count and token budget at the start of a new calendar day.
-  - [ ] **BYO API key mode:** Allow users to paste their own API key; bypass all limits and route requests directly using their key.
-  - [ ] **Informational token counter (BYO mode):** Display running input/output token totals for users on their own key.
-  - [ ] **Limit-reached notification:** Show the universal popup when a user hits their daily request or token limit.
+- [x] **Usage Control & API Key Modes**
+  - [x] **Default-key mode with daily limits:** Enforce per-user daily limits (request count + token budget) server-side via MongoDB counters before proxying each AI request.
+  - [x] **Daily counter reset:** Reset each user's request count and token budget at the start of a new calendar day.
+  - [x] **BYO API key mode:** Allow users to paste their own API key; bypass all limits and route requests directly using their key.
+  - [x] **Informational token counter (BYO mode):** Display running input/output token totals for users on their own key.
+  - [x] **Limit-reached notification:** Show the universal popup when a user hits their daily request or token limit.
 
 ---
 
@@ -47,8 +47,8 @@ _Once the foundation is solid, deliver the core value: AI-powered text conversat
 
 _Layer in the full voice loop that makes INTSE a speaking practice tool, not just a chat app._
 
-- [ ] **Speech Input (STT)**
-  - [ ] **STT button:** Add a microphone button that activates the browser's Web Speech API to transcribe the user's speech into the message input field.
+- [x] **Speech Input (STT)**
+  - [x] **STT button:** Add a microphone button that activates the browser's Web Speech API to transcribe the user's speech into the message input field.
 
 - [ ] **Speech Output (TTS)**
   - [ ] **Auto-play AI responses:** Use the browser's Speech Synthesis API to read each AI reply aloud as it arrives.

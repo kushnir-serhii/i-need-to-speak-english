@@ -8,9 +8,17 @@ interface SettingsState {
   targetLanguage: string;
   visitorName: string | null;
   hasSeenNamePrompt: boolean;
+  apiKey: string;
+  ttsEnabled: boolean;
+  selectedVoiceURI: string | null;
   toggleTheme: () => void;
   setVisitorName: (name: string | null) => void;
   markNamePromptSeen: () => void;
+  setApiKey: (key: string) => void;
+  clearApiKey: () => void;
+  setTtsEnabled: (v: boolean) => void;
+  setSelectedVoiceURI: (uri: string | null) => void;
+  setTargetLanguage: (lang: string) => void;
 }
 
 export const useSettingsStore = create<SettingsState>()(
@@ -20,6 +28,9 @@ export const useSettingsStore = create<SettingsState>()(
       targetLanguage: 'English',
       visitorName: null,
       hasSeenNamePrompt: false,
+      apiKey: '',
+      ttsEnabled: false,
+      selectedVoiceURI: null,
       toggleTheme: () => {
         const nextTheme: Theme = get().theme === 'dark' ? 'light' : 'dark';
         set({ theme: nextTheme });
@@ -36,6 +47,21 @@ export const useSettingsStore = create<SettingsState>()(
       },
       markNamePromptSeen: () => {
         set({ hasSeenNamePrompt: true });
+      },
+      setApiKey: (key: string) => {
+        set({ apiKey: key });
+      },
+      clearApiKey: () => {
+        set({ apiKey: '' });
+      },
+      setTtsEnabled: (v: boolean) => {
+        set({ ttsEnabled: v });
+      },
+      setSelectedVoiceURI: (uri: string | null) => {
+        set({ selectedVoiceURI: uri });
+      },
+      setTargetLanguage: (lang: string) => {
+        set({ targetLanguage: lang, selectedVoiceURI: null });
       },
     }),
     {

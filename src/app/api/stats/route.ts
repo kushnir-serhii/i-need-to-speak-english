@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { connectDB } from '@/lib/mongodb'
 import Visitor from '@/lib/db/models/Visitor'
+import { resetIfNeeded } from '@/lib/db/resetIfNeeded'
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
@@ -27,26 +28,21 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     const count = await Visitor.countDocuments({ enrolledAt: { $gte: startOfToday } })
 
-    let visitor = await Visitor.findOne({ visitorId })
+    const visitor = await Visitor.findOne({ visitorId })
 
     if (!visitor) {
       return NextResponse.json({ error: 'not_found' }, { status: 404 })
     }
 
-    if (visitor.lastResetAt < startOfToday) {
-      visitor = await Visitor.findOneAndUpdate(
-        { visitorId },
-        { $set: { dailyRequests: 0, dailyTokens: 0, lastResetAt: now } },
-        { new: true }
-      )
-    }
+    const freshVisitor = await resetIfNeeded(visitor)
 
     return NextResponse.json(
       {
         count,
         cap,
-        dailyRequests: visitor!.dailyRequests,
+        dailyRequests: freshVisitor.dailyRequests,
         dailyRequestLimit,
+        dailyTokens: freshVisitor.dailyTokens,
       },
       { status: 200 }
     )

@@ -1,6 +1,9 @@
+export { AutoDialogToggle } from './AutoDialogToggle';
 export { CharCounter } from './CharCounter';
 export { ChatInput } from './ChatInput';
+export { ChatStatusBar } from './ChatStatusBar';
 export { ChatThread } from './ChatThread';
 export { EmptyState } from './EmptyState';
 export { MessageBubble } from './MessageBubble';
+export { STTButton } from './STTButton';
 export { TypingIndicator } from './TypingIndicator';

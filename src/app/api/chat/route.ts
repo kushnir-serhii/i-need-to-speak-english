@@ -1,6 +1,12 @@
 import { NextRequest } from 'next/server'
+import OpenAI from 'openai'
 import { getOpenAIClient } from '@/lib/openai'
 import { DEFAULT_SYSTEM_PROMPT } from '@/lib/systemPrompt'
+import { connectDB } from '@/lib/mongodb'
+import Visitor from '@/lib/db/models/Visitor'
+import { resetIfNeeded } from '@/lib/db/resetIfNeeded'
+
+const BYO_KEY_PATTERN = /^sk-[A-Za-z0-9\-_]{20,}$/
 
 interface ChatMessage {
   role: 'user' | 'assistant'
@@ -62,28 +68,101 @@ export async function POST(request: NextRequest): Promise<Response> {
       }
     }
 
-    const openai = getOpenAIClient()
-    const stream = await openai.chat.completions.create({
-      model: process.env.OPENAI_MODEL ?? 'gpt-4o-mini',
-      stream: true,
-      max_tokens: 1024,
-      messages: [
-        { role: 'system', content: DEFAULT_SYSTEM_PROMPT },
-        ...typedMessages,
-      ],
-    })
+    const { apiKey } = body as Record<string, unknown>
+
+    // BYO key validation
+    let byoKey: string | null = null
+    if (apiKey !== undefined && apiKey !== null && apiKey !== '') {
+      if (typeof apiKey !== 'string' || !BYO_KEY_PATTERN.test(apiKey)) {
+        return jsonError(400, 'invalid_api_key_format', 'API key format is invalid')
+      }
+      byoKey = apiKey
+    }
+
+    await connectDB()
+    const visitor = await Visitor.findOne({ visitorId })
+    if (!visitor) {
+      return jsonError(404, 'not_found', 'Visitor not found')
+    }
+
+    const freshVisitor = await resetIfNeeded(visitor)
+
+    // Only enforce daily limits in Free mode (no BYO key)
+    if (!byoKey) {
+      const limitEnv = process.env.DAILY_REQUEST_LIMIT
+      const parsedLimit = parseInt(limitEnv ?? '', 10)
+      const dailyRequestLimit = Number.isFinite(parsedLimit) ? parsedLimit : 20
+
+      if (freshVisitor.dailyRequests >= dailyRequestLimit) {
+        return new Response(
+          JSON.stringify({
+            error: 'daily_limit_exceeded',
+            dailyRequests: freshVisitor.dailyRequests,
+            dailyRequestLimit,
+          }),
+          { status: 429, headers: { 'Content-Type': 'application/json' } }
+        )
+      }
+    }
+
+    // Use one-off client for BYO key; singleton for Free mode
+    const openai = byoKey ? new OpenAI({ apiKey: byoKey }) : getOpenAIClient()
+
+    let stream: Awaited<ReturnType<typeof openai.chat.completions.create>>
+    try {
+      stream = await openai.chat.completions.create({
+        model: process.env.OPENAI_MODEL ?? 'gpt-4o-mini',
+        stream: true,
+        stream_options: { include_usage: true },
+        max_tokens: 1024,
+        messages: [
+          { role: 'system', content: DEFAULT_SYSTEM_PROMPT },
+          ...typedMessages,
+        ],
+      })
+    } catch (err: unknown) {
+      if (
+        typeof err === 'object' &&
+        err !== null &&
+        'status' in err &&
+        (err as Record<string, unknown>).status === 401
+      ) {
+        return jsonError(401, 'invalid_api_key', 'The provided API key is invalid')
+      }
+      throw err
+    }
 
     const encoder = new TextEncoder()
     const readableStream = new ReadableStream({
       async start(controller) {
         try {
+          let totalTokens = 0
+          let inputTokens = 0
+          let outputTokens = 0
+
           for await (const chunk of stream) {
             const delta = chunk.choices[0]?.delta?.content ?? ''
             if (delta) {
               controller.enqueue(encoder.encode(delta))
             }
+            // Capture usage from the final chunk (sent by OpenAI when include_usage: true)
+            if (chunk.usage) {
+              inputTokens = chunk.usage.prompt_tokens ?? 0
+              outputTokens = chunk.usage.completion_tokens ?? 0
+              totalTokens = chunk.usage.total_tokens ?? 0
+            }
           }
+
+          // Append USAGE sentinel before closing
+          const sentinel = `\n\x00USAGE:${JSON.stringify({ inputTokens, outputTokens, totalTokens })}`
+          controller.enqueue(encoder.encode(sentinel))
           controller.close()
+
+          // Fire-and-forget counter increment (do not await)
+          Visitor.findOneAndUpdate(
+            { visitorId },
+            { $inc: { dailyRequests: 1, dailyTokens: totalTokens } }
+          ).catch(console.error)
         } catch (err: unknown) {
           controller.error(err)
         }

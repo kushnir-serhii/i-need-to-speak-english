@@ -1,7 +1,7 @@
 # Functional Specification: Usage Control & API Key Modes
 
 - **Roadmap Item:** Phase 2 — Usage Control & API Key Modes
-- **Status:** Approved
+- **Status:** Completed
 - **Author:** Serhii Kushnir
 
 ---
@@ -77,40 +77,40 @@ The user can clear their key from the Settings page. Doing so immediately return
 ## 3. Acceptance Criteria
 
 **Mode indicator**
-- [ ] The chat interface always shows a label indicating the current mode — either "Free mode" or "Using your key".
-- [ ] Switching modes (entering or removing a key) updates the label immediately without a page reload.
+- [x] The chat interface always shows a label indicating the current mode — either "Free mode" or "Using your key".
+- [x] Switching modes (entering or removing a key) updates the label immediately without a page reload.
 
 **Daily message counter (Free mode)**
-- [ ] While in Free mode, a counter is visible in the chat showing how many messages the user has left today (e.g. "15 messages left today").
-- [ ] The counter decrements by one immediately after each message is sent.
-- [ ] The counter is not visible in Your Key mode.
+- [x] While in Free mode, a counter is visible in the chat showing how many messages the user has left today (e.g. "15 messages left today").
+- [x] The counter decrements by one immediately after each message is sent.
+- [x] The counter is not visible in Your Key mode.
 
 **Limit enforcement (Free mode)**
-- [ ] When the user's last allowed message is sent, the text field and Send button become disabled.
-- [ ] A popup appears with the message: "You've reached your daily message limit. Come back tomorrow — or use your own AI key to continue now."
-- [ ] The popup has an "Enter your key" button and an "OK" button.
-- [ ] Pressing "OK" dismisses the popup; the input remains disabled.
-- [ ] Pressing "Enter your key" expands the popup to show a key entry field.
-- [ ] After entering a valid key in the popup, the app switches to Your Key mode, the popup closes, and the chat input becomes enabled.
-- [ ] After the daily reset, the input is enabled again and the counter is restored to its full value.
+- [x] When the user's last allowed message is sent, the text field and Send button become disabled.
+- [x] A popup appears with the message: "You've reached your daily message limit. Come back tomorrow — or use your own AI key to continue now."
+- [x] The popup has an "Enter your key" button and an "OK" button.
+- [x] Pressing "OK" dismisses the popup; the input remains disabled.
+- [x] Pressing "Enter your key" expands the popup to show a key entry field.
+- [x] After entering a valid key in the popup, the app switches to Your Key mode, the popup closes, and the chat input becomes enabled.
+- [x] After the daily reset, the input is enabled again and the counter is restored to its full value.
 
 **BYO key entry (Settings page)**
-- [ ] The Settings page has a labelled field for entering a personal AI key.
-- [ ] Saving a key immediately switches the app to Your Key mode.
-- [ ] Clearing the key field and saving immediately returns the app to Free mode.
+- [x] The Settings page has a labelled field for entering a personal AI key.
+- [x] Saving a key immediately switches the app to Your Key mode.
+- [x] Clearing the key field and saving immediately returns the app to Free mode.
 
 **Token counter (Your Key mode)**
-- [ ] While in Your Key mode, a token counter is visible in the chat interface, updating after each exchange.
-- [ ] The same cumulative token count is visible on the dashboard.
-- [ ] The token counter is not visible in Free mode.
+- [x] While in Your Key mode, a token counter is visible in the chat interface, updating after each exchange.
+- [x] The same cumulative token count is visible on the dashboard.
+- [x] The token counter is not visible in Free mode.
 
 **Invalid key**
-- [ ] If a message fails due to an invalid or expired key, the error message shown is: "Your API key appears to be invalid. Please check it in Settings."
-- [ ] The failed message remains visible in the conversation thread.
+- [x] If a message fails due to an invalid or expired key, the error message shown is: "Your API key appears to be invalid. Please check it in Settings."
+- [x] The failed message remains visible in the conversation thread.
 
 **Key removal**
-- [ ] Removing the key from Settings immediately reverts the app to Free mode.
-- [ ] Daily limits apply again from the moment the key is removed.
+- [x] Removing the key from Settings immediately reverts the app to Free mode.
+- [x] Daily limits apply again from the moment the key is removed.
 
 ---
 
