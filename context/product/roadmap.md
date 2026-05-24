@@ -50,9 +50,9 @@ _Layer in the full voice loop that makes INTSE a speaking practice tool, not jus
 - [x] **Speech Input (STT)**
   - [x] **STT button:** Add a microphone button that activates the browser's Web Speech API to transcribe the user's speech into the message input field.
 
-- [ ] **Speech Output (TTS)**
-  - [ ] **Auto-play AI responses:** Use the browser's Speech Synthesis API to read each AI reply aloud as it arrives.
-  - [ ] **Language-aware voice selection:** Populate the voice list from voices available in the browser for the user's selected target language.
+- [x] **Speech Output (TTS)**
+  - [x] **Auto-play AI responses:** Use the browser's Speech Synthesis API to read each AI reply aloud as it arrives.
+  - [x] **Language-aware voice selection:** Populate the voice list from voices available in the browser for the user's selected target language.
 
 - [ ] **Per-Message Controls**
   - [ ] **Three-dot context menu:** Add a menu button to each AI message bubble with the following actions:

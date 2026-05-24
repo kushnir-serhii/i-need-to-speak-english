@@ -1,7 +1,7 @@
 # Technical Specification: Speech Output (TTS)
 
 - **Functional Specification:** [context/spec/007-speech-output-tts/functional-spec.md](context/spec/007-speech-output-tts/functional-spec.md)
-- **Status:** Draft
+- **Status:** Completed
 - **Author(s):** Serhii Kushnir
 
 ---

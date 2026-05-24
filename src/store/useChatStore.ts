@@ -15,6 +15,7 @@ interface ChatState {
   isStreaming: boolean;
   sessionTokens: number;
   autoDialogActive: boolean;
+  speakingMessageId: string | null;
   addMessage: (role: Message['role'], content: string, streaming?: boolean) => string;
   setStreaming: (value: boolean) => void;
   clearMessages: () => void;
@@ -22,6 +23,8 @@ interface ChatState {
   finalizeMessage: (id: string) => void;
   addSessionTokens: (n: number) => void;
   setAutoDialogActive: (v: boolean) => void;
+  setSpeakingMessageId: (id: string | null) => void;
+  deleteMessage: (id: string) => void;
 }
 
 export const useChatStore = create<ChatState>()((set) => ({
@@ -29,6 +32,7 @@ export const useChatStore = create<ChatState>()((set) => ({
   isStreaming: false,
   sessionTokens: 0,
   autoDialogActive: false,
+  speakingMessageId: null,
 
   addMessage: (role, content, streaming = false) => {
     const id = crypto.randomUUID();
@@ -66,4 +70,12 @@ export const useChatStore = create<ChatState>()((set) => ({
     set((state) => ({ sessionTokens: state.sessionTokens + n })),
 
   setAutoDialogActive: (v) => set({ autoDialogActive: v }),
+
+  setSpeakingMessageId: (id) => set({ speakingMessageId: id }),
+
+  deleteMessage: (id) =>
+    set((state) => ({
+      messages: state.messages.filter((msg) => msg.id !== id),
+      speakingMessageId: state.speakingMessageId === id ? null : state.speakingMessageId,
+    })),
 }));

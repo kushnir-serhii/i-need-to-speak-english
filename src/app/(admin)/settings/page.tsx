@@ -4,13 +4,21 @@ import { useState } from 'react';
 import { useSettingsStore } from '@/store/useSettingsStore';
 import { useChatStore } from '@/store/useChatStore';
 import { useNotification } from '@/hooks/useNotification';
+import { useTTS } from '@/hooks/useTTS';
 
 export default function SettingsPage() {
   const apiKey = useSettingsStore((s) => s.apiKey);
   const setApiKey = useSettingsStore((s) => s.setApiKey);
   const clearApiKey = useSettingsStore((s) => s.clearApiKey);
+  const ttsEnabled = useSettingsStore((s) => s.ttsEnabled);
+  const setTtsEnabled = useSettingsStore((s) => s.setTtsEnabled);
+  const selectedVoiceURI = useSettingsStore((s) => s.selectedVoiceURI);
+  const setSelectedVoiceURI = useSettingsStore((s) => s.setSelectedVoiceURI);
+  const targetLanguage = useSettingsStore((s) => s.targetLanguage);
   const sessionTokens = useChatStore((s) => s.sessionTokens);
   const { toast } = useNotification();
+
+  const { isSupported, voices } = useTTS({ targetLanguage });
 
   const [inputValue, setInputValue] = useState<string>(apiKey);
 
@@ -86,6 +94,65 @@ export default function SettingsPage() {
       {/* Language (placeholder) */}
       <section className="mb-8 rounded-lg border border-[#30363D] bg-[#161B22] p-6">
         <h2 className="text-base font-semibold text-[#F0F6FC]">Language</h2>
+      </section>
+
+      {/* Text to Speech */}
+      <section className="mb-8 rounded-lg border border-[#30363D] bg-[#161B22] p-6">
+        <h2 className="mb-1 text-base font-semibold text-[#F0F6FC]">
+          Text to Speech
+        </h2>
+        <p className="mb-4 text-sm text-[#8B949E]">
+          Automatically read AI responses aloud after they finish streaming.
+        </p>
+
+        {/* Enable auto-play row */}
+        <div className="mb-4 flex items-center justify-between">
+          <label
+            htmlFor="tts-enabled"
+            className="text-sm font-medium text-[#F0F6FC]"
+          >
+            Enable auto-play
+          </label>
+          <input
+            id="tts-enabled"
+            type="checkbox"
+            checked={ttsEnabled}
+            onChange={(e) => setTtsEnabled(e.target.checked)}
+            className="h-4 w-4 cursor-pointer accent-[#2F81F7]"
+          />
+        </div>
+
+        {/* Voice selector — only when enabled, supported, and voices available */}
+        {ttsEnabled && isSupported && voices.length > 0 && (
+          <div className="flex items-center justify-between gap-4">
+            <label
+              htmlFor="tts-voice"
+              className="text-sm font-medium text-[#F0F6FC]"
+            >
+              Voice
+            </label>
+            <select
+              id="tts-voice"
+              value={selectedVoiceURI ?? ''}
+              onChange={(e) => setSelectedVoiceURI(e.target.value || null)}
+              className="rounded-md border border-[#30363D] bg-[#0D1117] px-3 py-2 text-sm text-[#F0F6FC] outline-none focus:border-[#2F81F7] focus:ring-1 focus:ring-[#2F81F7]"
+            >
+              <option value="">Default (system)</option>
+              {voices.map((voice) => (
+                <option key={voice.voiceURI} value={voice.voiceURI}>
+                  {voice.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
+        {/* Unsupported notice */}
+        {!isSupported && (
+          <p className="text-sm text-[#8B949E]">
+            Text-to-speech is not supported in this browser.
+          </p>
+        )}
       </section>
     </div>
   );

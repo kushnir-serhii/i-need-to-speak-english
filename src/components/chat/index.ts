@@ -5,5 +5,7 @@ export { ChatStatusBar } from './ChatStatusBar';
 export { ChatThread } from './ChatThread';
 export { EmptyState } from './EmptyState';
 export { MessageBubble } from './MessageBubble';
+export { MessageMenu } from './MessageMenu';
 export { STTButton } from './STTButton';
+export { TTSButton } from './TTSButton';
 export { TypingIndicator } from './TypingIndicator';

@@ -19,6 +19,8 @@ interface SettingsState {
   setTtsEnabled: (v: boolean) => void;
   setSelectedVoiceURI: (uri: string | null) => void;
   setTargetLanguage: (lang: string) => void;
+  ttsSpeed: number;
+  setTtsSpeed: (speed: number) => void;
 }
 
 export const useSettingsStore = create<SettingsState>()(
@@ -31,6 +33,7 @@ export const useSettingsStore = create<SettingsState>()(
       apiKey: '',
       ttsEnabled: false,
       selectedVoiceURI: null,
+      ttsSpeed: 1,
       toggleTheme: () => {
         const nextTheme: Theme = get().theme === 'dark' ? 'light' : 'dark';
         set({ theme: nextTheme });
@@ -63,6 +66,7 @@ export const useSettingsStore = create<SettingsState>()(
       setTargetLanguage: (lang: string) => {
         set({ targetLanguage: lang, selectedVoiceURI: null });
       },
+      setTtsSpeed: (speed: number) => set({ ttsSpeed: Math.min(2.0, Math.max(0.5, speed)) }),
     }),
     {
       name: 'intse-settings',

@@ -9,8 +9,8 @@
 - **Styling:** Tailwind CSS v4 (already configured via `@tailwindcss/postcss`).
 - **State Management:** Zustand — three stores:
   - `useUserStore` — visitor identity (`visitorId: string | null`, `visitorCount: number`, `dailyCap: number`, `dailyRequests: number`, `dailyRequestLimit: number`).
-  - `useChatStore` — active session messages, streaming state, token counters.
-  - `useSettingsStore` — target language, active system prompt (default vs. custom), TTS speed, selected voice.
+  - `useChatStore` — active session messages, streaming state, token counters, `speakingMessageId` (transient — tracks which message is currently being read aloud by TTS).
+  - `useSettingsStore` — target language, active system prompt (default vs. custom), `ttsEnabled`, `selectedVoiceURI`, TTS speed (future).
 - **AI Client:** `openai` npm package — used exclusively inside Next.js API routes (never imported client-side). Supports streaming responses and token usage reporting.
 - **Component Architecture:** Reusable components in `src/components/` (organised by domain: `chat/`, `dashboard/`, `common/`, `ui/`). Pages under `src/app/(admin)/` import and compose these components.
 
@@ -33,8 +33,11 @@ src/
         route.ts          ← name-based login / user lookup
       usage/
         route.ts          ← read current user limits
+  hooks/
+    useSpeechToText.ts    ← STT via Web Speech API
+    useTTS.ts             ← TTS via Speech Synthesis API (voice catalogue, playback queue)
   components/
-    chat/                 ← MessageBubble, MessageMenu, ChatInput, STTButton
+    chat/                 ← MessageBubble, MessageMenu, ChatInput, STTButton, TTSButton
     dashboard/            ← HistoryList, UsageIndicator, LanguageSelector
     common/               ← Navigation, Header (existing)
     ui/                   ← Button, Popup, Input, ThemeToggle (existing + new)

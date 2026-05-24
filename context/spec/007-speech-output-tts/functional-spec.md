@@ -1,7 +1,7 @@
 # Functional Specification: Speech Output (TTS)
 
 - **Roadmap Item:** Phase 3 — Voice: Speech Output (TTS) + Language-Aware Voice Selection
-- **Status:** Draft
+- **Status:** Completed
 - **Author:** Serhii Kushnir
 
 ---
@@ -27,10 +27,10 @@ This feature completes the voice loop: once the AI finishes its reply, the app r
 - If the user's browser does not support text-to-speech, the toggle is **not shown at all**. The chat works normally without it.
 
 **Acceptance Criteria:**
-- [ ] Given a new visitor opens the app, the TTS toggle is visible in the chat toolbar in an "off" state.
-- [ ] When the user clicks the TTS toggle, it switches to an "on" state (icon changes visually).
-- [ ] When the user clicks it again, it switches back to "off."
-- [ ] Given a browser with no text-to-speech support, the TTS toggle is not rendered anywhere in the chat.
+- [x] Given a new visitor opens the app, the TTS toggle is visible in the chat toolbar in an "off" state.
+- [x] When the user clicks the TTS toggle, it switches to an "on" state (icon changes visually).
+- [x] When the user clicks it again, it switches back to "off."
+- [x] Given a browser with no text-to-speech support, the TTS toggle is not rendered anywhere in the chat.
 
 ---
 
@@ -44,11 +44,11 @@ This feature completes the voice loop: once the AI finishes its reply, the app r
 - If the user turns TTS **off** mid-playback, the speech stops immediately.
 
 **Acceptance Criteria:**
-- [ ] Given TTS is on, when an AI reply finishes arriving, the app reads it aloud without the user pressing anything.
-- [ ] Given TTS is on, the message being read aloud shows a visual animation or highlight during playback; it disappears when speech ends.
-- [ ] Given TTS is playing and the user sends another message, the current speech finishes before the new AI response is read.
-- [ ] Given TTS is playing and the user turns TTS off, speech stops immediately.
-- [ ] Given TTS is off, AI responses arrive silently with no speech playback.
+- [x] Given TTS is on, when an AI reply finishes arriving, the app reads it aloud without the user pressing anything.
+- [x] Given TTS is on, the message being read aloud shows a visual animation or highlight during playback; it disappears when speech ends.
+- [x] Given TTS is playing and the user sends another message, the current speech finishes before the new AI response is read.
+- [x] Given TTS is playing and the user turns TTS off, speech stops immediately.
+- [x] Given TTS is off, AI responses arrive silently with no speech playback.
 
 ---
 
@@ -61,11 +61,11 @@ This feature completes the voice loop: once the AI finishes its reply, the app r
 - When the user changes their target practice language, the voice list in Settings updates to show only voices available for the new language. If a previously selected voice is no longer relevant, the selection resets to the browser's default for the new language.
 
 **Acceptance Criteria:**
-- [ ] Given the user's target language is set to English and TTS is on, AI responses are spoken in an English-language voice.
-- [ ] Given no English voices are available, the app speaks using the browser's system default voice without showing an error.
-- [ ] Given the user opens Settings, they see a voice selector dropdown populated with voices available for their current target language.
-- [ ] When the user selects a voice in Settings and returns to chat, the next TTS playback uses the newly chosen voice.
-- [ ] Given the user changes their target language, the voice selector in Settings shows only voices for the new language, and the selection resets to the new language's default.
+- [x] Given the user's target language is set to English and TTS is on, AI responses are spoken in an English-language voice.
+- [x] Given no English voices are available, the app speaks using the browser's system default voice without showing an error.
+- [x] Given the user opens Settings, they see a voice selector dropdown populated with voices available for their current target language.
+- [x] When the user selects a voice in Settings and returns to chat, the next TTS playback uses the newly chosen voice.
+- [x] Given the user changes their target language, the voice selector in Settings shows only voices for the new language, and the selection resets to the new language's default.
 
 ---
 

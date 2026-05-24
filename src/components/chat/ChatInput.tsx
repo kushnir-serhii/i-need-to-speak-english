@@ -10,13 +10,27 @@ import { langToSpeechCode } from '@/utils/langToSpeechCode';
 import { AutoDialogToggle } from './AutoDialogToggle';
 import { CharCounter } from './CharCounter';
 import { STTButton } from './STTButton';
+import { TTSButton } from './TTSButton';
 
 interface ChatInputProps {
   disabled?: boolean;
   onLimitReached?: () => void;
+  speak?: (id: string, text: string) => void;
+  stop?: () => void;
+  isSupported?: boolean;
+  ttsEnabled?: boolean;
+  onTTSToggle?: () => void;
 }
 
-export function ChatInput({ disabled = false, onLimitReached }: ChatInputProps) {
+export function ChatInput({
+  disabled = false,
+  onLimitReached,
+  speak,
+  stop: _stop,
+  isSupported: ttsIsSupported = false,
+  ttsEnabled = false,
+  onTTSToggle,
+}: ChatInputProps) {
   const [inputValue, setInputValue] = useState('');
   const abortControllerRef = useRef<AbortController | null>(null);
   const { toast } = useNotification();
@@ -154,6 +168,15 @@ export function ChatInput({ disabled = false, onLimitReached }: ChatInputProps) 
       }
 
       useChatStore.getState().finalizeMessage(assistantId);
+
+      // Trigger TTS for the completed assistant message if enabled
+      if (useSettingsStore.getState().ttsEnabled) {
+        const msg = useChatStore.getState().messages.find((m) => m.id === assistantId);
+        if (msg?.content) {
+          speak?.(assistantId, msg.content);
+        }
+      }
+
       useUserStore.getState().incrementRequests();
     } catch (error: unknown) {
       // AbortError is not a real error — ignore it
@@ -164,7 +187,7 @@ export function ChatInput({ disabled = false, onLimitReached }: ChatInputProps) 
       useChatStore.getState().finalizeMessage(assistantId);
       toast('error', 'Something went wrong. Please try again.');
     }
-  }, [inputValue, toast]);
+  }, [inputValue, toast, speak]);
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -212,6 +235,13 @@ export function ChatInput({ disabled = false, onLimitReached }: ChatInputProps) 
             setAutoDialogActive(next);
             if (next) startListening();
           }}
+        />
+
+        <TTSButton
+          isEnabled={ttsEnabled}
+          isSupported={ttsIsSupported}
+          disabled={disabled || isStreaming}
+          onClick={() => onTTSToggle?.()}
         />
 
         <button
