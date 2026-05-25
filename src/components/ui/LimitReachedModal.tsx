@@ -32,8 +32,7 @@ export function LimitReachedModal({ isOpen, onClose }: LimitReachedModalProps) {
     <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center">
       <div className="bg-[#161B22] rounded-xl max-w-sm w-full mx-4 p-6 border border-[#30363D]">
         <p className="text-[#8B949E] text-sm leading-relaxed mb-6">
-          You&apos;ve reached your daily message limit. Come back tomorrow — or use your own AI key
-          to continue now.
+          You&apos;ve reached today&apos;s limit. Come back tomorrow! You can also use your own key to continue.
         </p>
 
         {!showKeyField && (

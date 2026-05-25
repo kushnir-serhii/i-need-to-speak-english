@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { ChatThread } from '@/components/chat/ChatThread';
 import { ChatStatusBar } from '@/components/chat/ChatStatusBar';
 import { ChatInput } from '@/components/chat/ChatInput';
@@ -29,6 +29,32 @@ export default function ChatPage() {
   }, []);
 
   const { isSupported, voices, speak, stop, repeat } = useTTS({ targetLanguage });
+
+  useEffect(() => {
+    const now = new Date();
+    const tomorrow = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1));
+    const msUntilMidnight = tomorrow.getTime() - Date.now();
+
+    const timerId = setTimeout(() => {
+      const visitorId = useUserStore.getState().visitorId;
+      if (visitorId === null) return;
+      fetch(`/api/stats?visitorId=${visitorId}`)
+        .then((res) => res.json())
+        .then((data: { count: number; cap: number; dailyRequests: number; dailyRequestLimit: number }) => {
+          useUserStore.getState().updateStats(
+            data.count,
+            data.cap,
+            data.dailyRequests,
+            data.dailyRequestLimit,
+          );
+        })
+        .catch(() => {
+          // Fail silently — the user will see updated limits on their next request
+        });
+    }, msUntilMidnight);
+
+    return () => clearTimeout(timerId);
+  }, []);
 
   const isLimitReached = apiKey === '' && dailyRequests >= dailyRequestLimit;
 

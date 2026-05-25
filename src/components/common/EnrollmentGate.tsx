@@ -16,7 +16,7 @@ function DailyLimitScreen({ count, cap }: { count: number; cap: number }) {
         </span>
       </div>
 
-      <h1 className="max-w-md text-center font-[var(--font-inter)] text-2xl font-bold text-[#F0F6FC]">
+      <h1 className="max-w-md text-center font-[--font-inter] text-2xl font-bold text-[#F0F6FC]">
         We&apos;ve reached our daily visitor limit. Come back tomorrow!
       </h1>
 

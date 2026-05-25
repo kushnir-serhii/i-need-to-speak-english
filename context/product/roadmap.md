@@ -13,7 +13,7 @@ _The minimal infrastructure that everything else depends on: identity, cost cont
   - [x] **Daily visitor cap:** Enforce a configurable daily limit on new visitors. Visitors who arrive after the cap is reached see a "come back tomorrow" screen. Existing (returning) visitors are always admitted.
   - [x] **Optional name prompt:** Show a one-time "What's your name?" prompt to newly enrolled visitors. Name is saved on-device only and used for personalised greetings. Skippable.
   - [x] **Visitor counter in header:** Display the current day's enrolled visitor count vs. the daily cap (e.g., "47 / 100 visitors today") in the app header.
-  - [ ] **Per-visitor daily request limit (default key):** Track and enforce a daily AI message cap per visitor when they are using the owner's API key. Reset daily. _(Counter infrastructure complete; chat-side enforcement is Phase 2.)_
+  - [x] **Per-visitor daily request limit (default key):** Track and enforce a daily AI message cap per visitor when they are using the owner's API key. Reset daily.
 
 - [x] **Project Scaffold & Infrastructure**
   - [x] **Next.js project setup:** Initialize the app with a mobile-first responsive layout, routing, and environment configuration for Vercel deployment.
