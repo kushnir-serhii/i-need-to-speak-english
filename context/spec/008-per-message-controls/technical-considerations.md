@@ -1,7 +1,7 @@
 # Technical Specification: Per-Message Controls
 
 - **Functional Specification:** [context/spec/008-per-message-controls/functional-spec.md](context/spec/008-per-message-controls/functional-spec.md)
-- **Status:** Draft
+- **Status:** Completed
 - **Author(s):** Serhii Kushnir
 
 ---

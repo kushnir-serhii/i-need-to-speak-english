@@ -54,13 +54,13 @@ _Layer in the full voice loop that makes INTSE a speaking practice tool, not jus
   - [x] **Auto-play AI responses:** Use the browser's Speech Synthesis API to read each AI reply aloud as it arrives.
   - [x] **Language-aware voice selection:** Populate the voice list from voices available in the browser for the user's selected target language.
 
-- [ ] **Per-Message Controls**
-  - [ ] **Three-dot context menu:** Add a menu button to each AI message bubble with the following actions:
-    - [ ] **Repeat:** Re-read the message aloud via TTS.
-    - [ ] **Speed control:** A slider to adjust TTS playback speed (0.5× – 2×).
-    - [ ] **Voice selector:** A dropdown of available voices for the current language.
-    - [ ] **Copy:** Copy the message text to the clipboard.
-    - [ ] **Delete:** Remove the message from the conversation view (and browser DB).
+- [x] **Per-Message Controls**
+  - [x] **Three-dot context menu:** Add a menu button to each AI message bubble with the following actions:
+    - [x] **Repeat:** Re-read the message aloud via TTS.
+    - [x] **Speed control:** A slider to adjust TTS playback speed (0.5× – 2×).
+    - [x] **Voice selector:** A dropdown of available voices for the current language.
+    - [x] **Copy:** Copy the message text to the clipboard.
+    - [x] **Delete:** Remove the message from the conversation view (and browser DB).
 
 - [ ] **Language Selector**
   - [ ] **Target language picker:** Let users choose any language to practice; the selection filters the available TTS voices and is passed to the AI as part of the system prompt context.

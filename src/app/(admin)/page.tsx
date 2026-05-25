@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { ChatThread } from '@/components/chat/ChatThread';
 import { ChatStatusBar } from '@/components/chat/ChatStatusBar';
 import { ChatInput } from '@/components/chat/ChatInput';
@@ -16,8 +16,19 @@ export default function ChatPage() {
   const targetLanguage = useSettingsStore((s) => s.targetLanguage);
   const ttsEnabled = useSettingsStore((s) => s.ttsEnabled);
   const setTtsEnabled = useSettingsStore((s) => s.setTtsEnabled);
+  const ttsSpeed = useSettingsStore((s) => s.ttsSpeed);
+  const setTtsSpeed = useSettingsStore((s) => s.setTtsSpeed);
+  const setSelectedVoiceURI = useSettingsStore((s) => s.setSelectedVoiceURI);
 
-  const { isSupported, speak, stop, repeat } = useTTS({ targetLanguage });
+  const handleSpeedChange = useCallback((speed: number) => {
+    setTtsSpeed(speed);
+  }, [setTtsSpeed]);
+
+  const handleVoiceChange = useCallback((uri: string) => {
+    setSelectedVoiceURI(uri);
+  }, []);
+
+  const { isSupported, voices, speak, stop, repeat } = useTTS({ targetLanguage });
 
   const isLimitReached = apiKey === '' && dailyRequests >= dailyRequestLimit;
 
@@ -25,7 +36,7 @@ export default function ChatPage() {
 
   return (
     <div className="flex flex-col h-full">
-      <ChatThread repeat={repeat} />
+      <ChatThread repeat={repeat} ttsSpeed={ttsSpeed} onSpeedChange={handleSpeedChange} voices={voices} onVoiceChange={handleVoiceChange} />
       <div className="flex-none">
         <ChatStatusBar />
       </div>

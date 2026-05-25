@@ -1,7 +1,7 @@
 # Functional Specification: Per-Message Controls
 
 - **Roadmap Item:** Phase 3 — Voice: Per-Message Controls (Three-dot context menu)
-- **Status:** Draft
+- **Status:** Completed
 - **Author:** Serhii Kushnir
 
 ---
@@ -28,9 +28,9 @@ The goal is to make INTSE feel like a real practice partner: the user can slow d
 - Tapping or clicking anywhere outside the open menu closes it without taking any action.
 
 **Acceptance Criteria:**
-- [ ] Given any message (AI or user) in the conversation, a three-dot icon is visible on the bubble at all times.
-- [ ] When the user taps the three-dot icon, a menu appears adjacent to that message bubble.
-- [ ] When the user taps anywhere outside the open menu, the menu closes with no action taken.
+- [x] Given any message (AI or user) in the conversation, a three-dot icon is visible on the bubble at all times.
+- [x] When the user taps the three-dot icon, a menu appears adjacent to that message bubble.
+- [x] When the user taps anywhere outside the open menu, the menu closes with no action taken.
 
 ---
 
@@ -45,9 +45,9 @@ When the three-dot menu is opened on an **AI message**, five options are availab
 - If another message is already being read aloud, tapping Repeat stops the current playback and immediately begins reading the selected message from the start.
 
 **Acceptance Criteria:**
-- [ ] Given TTS is on, when the user taps Repeat on an AI message, the message is read aloud from the beginning.
-- [ ] Given TTS is off, the Repeat option is either hidden or visually disabled (not interactive).
-- [ ] Given TTS is actively speaking and the user taps Repeat on a different message, the current speech stops and the new message begins playing immediately.
+- [x] Given TTS is on, when the user taps Repeat on an AI message, the message is read aloud from the beginning.
+- [x] Given TTS is off, the Repeat option is either hidden or visually disabled (not interactive).
+- [x] Given TTS is actively speaking and the user taps Repeat on a different message, the current speech stops and the new message begins playing immediately.
 
 ---
 
@@ -60,9 +60,9 @@ When the three-dot menu is opened on an **AI message**, five options are availab
 - The selected speed is saved and persists the next time the user opens the app.
 
 **Acceptance Criteria:**
-- [ ] When the user taps Speed, a speed slider appears within the menu, ranging from 0.5× to 2×, defaulting to 1×.
-- [ ] After the user moves the slider, the next TTS playback — whether auto-play or Repeat — uses the newly selected speed.
-- [ ] After the user closes and reopens the app, the previously selected speed is preserved.
+- [x] When the user taps Speed, a speed slider appears within the menu, ranging from 0.5× to 2×, defaulting to 1×.
+- [x] After the user moves the slider, the next TTS playback — whether auto-play or Repeat — uses the newly selected speed.
+- [x] After the user closes and reopens the app, the previously selected speed is preserved.
 
 ---
 
@@ -73,10 +73,10 @@ When the three-dot menu is opened on an **AI message**, five options are availab
 - All subsequent TTS playback uses the newly selected voice.
 
 **Acceptance Criteria:**
-- [ ] When the user taps Voice, a dropdown of available voices for the current target language appears.
-- [ ] When the user selects a voice, the next TTS playback uses that voice.
-- [ ] The voice selected here is reflected in the Settings area — both show the same active voice.
-- [ ] After the user closes and reopens the app, the selected voice is preserved.
+- [x] When the user taps Voice, a dropdown of available voices for the current target language appears.
+- [x] When the user selects a voice, the next TTS playback uses that voice.
+- [x] The voice selected here is reflected in the Settings area — both show the same active voice.
+- [x] After the user closes and reopens the app, the selected voice is preserved.
 
 ---
 
@@ -86,9 +86,9 @@ When the three-dot menu is opened on an **AI message**, five options are availab
 - A brief visual confirmation appears (e.g., "Copied!" shown briefly) and the menu closes.
 
 **Acceptance Criteria:**
-- [ ] When the user taps Copy on an AI message, the full message text is placed on the clipboard.
-- [ ] A brief visual confirmation ("Copied!" or equivalent) is shown after the copy action.
-- [ ] The menu closes after copying.
+- [x] When the user taps Copy on an AI message, the full message text is placed on the clipboard.
+- [x] A brief visual confirmation ("Copied!" or equivalent) is shown after the copy action.
+- [x] The menu closes after copying.
 
 ---
 
@@ -99,9 +99,9 @@ When the three-dot menu is opened on an **AI message**, five options are availab
 - The remaining messages in the conversation are unaffected.
 
 **Acceptance Criteria:**
-- [ ] When the user taps Delete on an AI message, the bubble is immediately removed with no confirmation prompt.
-- [ ] After refreshing or returning to the app, the deleted message does not reappear.
-- [ ] The remaining messages in the conversation are unaffected.
+- [x] When the user taps Delete on an AI message, the bubble is immediately removed with no confirmation prompt.
+- [x] After refreshing or returning to the app, the deleted message does not reappear.
+- [x] The remaining messages in the conversation are unaffected.
 
 ---
 
@@ -113,9 +113,9 @@ When the three-dot menu is opened on a **message sent by the user**, only **Copy
 - Copy and Delete behave identically to their behavior on AI messages (described in Section 2.2).
 
 **Acceptance Criteria:**
-- [ ] Given the user opens the three-dot menu on one of their own messages, only Copy and Delete are shown.
-- [ ] Copy places the user's message text on the clipboard and shows a brief visual confirmation.
-- [ ] Delete immediately removes the user's message with no confirmation, and the message does not reappear after a refresh.
+- [x] Given the user opens the three-dot menu on one of their own messages, only Copy and Delete are shown.
+- [x] Copy places the user's message text on the clipboard and shows a brief visual confirmation.
+- [x] Delete immediately removes the user's message with no confirmation, and the message does not reappear after a refresh.
 
 ---
 

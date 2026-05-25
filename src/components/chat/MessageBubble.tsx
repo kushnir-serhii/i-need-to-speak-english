@@ -12,15 +12,18 @@ interface MessageBubbleProps {
   onRepeat?: () => void;
   ttsSpeed?: number;
   onSpeedChange?: (speed: number) => void;
+  voices?: SpeechSynthesisVoice[];
+  selectedVoiceURI?: string | null;
+  onVoiceChange?: (uri: string) => void;
 }
 
-export function MessageBubble({ message, role, isSpeaking = false, onDelete, ttsEnabled = false, onRepeat, ttsSpeed = 1, onSpeedChange = () => {} }: MessageBubbleProps) {
+export function MessageBubble({ message, role, isSpeaking = false, onDelete, ttsEnabled = false, onRepeat, ttsSpeed = 1, onSpeedChange = () => {}, voices = [], selectedVoiceURI = null, onVoiceChange = () => {} }: MessageBubbleProps) {
   const isUser = message.role === 'user';
 
   if (isUser) {
     return (
       <div className="relative max-w-[75%] ml-auto bg-[#2F81F7] text-white rounded-2xl rounded-br-sm px-4 py-2.5 text-sm whitespace-pre-wrap wrap-break-word">
-        <MessageMenu content={message.content} onDelete={onDelete} side="left" role="user" ttsEnabled={ttsEnabled} onRepeat={onRepeat ?? (() => {})} ttsSpeed={ttsSpeed} onSpeedChange={onSpeedChange} />
+        <MessageMenu content={message.content} onDelete={onDelete} side="left" role="user" ttsEnabled={ttsEnabled} onRepeat={onRepeat ?? (() => {})} ttsSpeed={ttsSpeed} onSpeedChange={onSpeedChange} voices={voices} selectedVoiceURI={selectedVoiceURI} onVoiceChange={onVoiceChange} />
         {message.content}
       </div>
     );
@@ -30,7 +33,7 @@ export function MessageBubble({ message, role, isSpeaking = false, onDelete, tts
 
   return (
     <div className={`relative max-w-[75%] mr-auto bg-[#161B22] text-white rounded-2xl rounded-bl-sm px-4 py-2.5 text-sm border ${borderClass} whitespace-pre-wrap wrap-break-word`}>
-      <MessageMenu content={message.content} onDelete={onDelete} role="assistant" ttsEnabled={ttsEnabled} onRepeat={onRepeat ?? (() => {})} ttsSpeed={ttsSpeed} onSpeedChange={onSpeedChange} />
+      <MessageMenu content={message.content} onDelete={onDelete} role="assistant" ttsEnabled={ttsEnabled} onRepeat={onRepeat ?? (() => {})} ttsSpeed={ttsSpeed} onSpeedChange={onSpeedChange} voices={voices} selectedVoiceURI={selectedVoiceURI} onVoiceChange={onVoiceChange} />
       {message.content}
       {isSpeaking && (
         <span className="absolute bottom-2 right-2 text-[#2F81F7] animate-pulse" aria-hidden="true">

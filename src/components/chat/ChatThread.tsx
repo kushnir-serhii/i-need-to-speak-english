@@ -9,13 +9,18 @@ import { TypingIndicator } from './TypingIndicator';
 
 interface ChatThreadProps {
   repeat: (id: string, text: string) => void;
+  ttsSpeed: number;
+  onSpeedChange: (speed: number) => void;
+  voices: SpeechSynthesisVoice[];
+  onVoiceChange: (uri: string) => void;
 }
 
-export function ChatThread({ repeat }: ChatThreadProps) {
+export function ChatThread({ repeat, ttsSpeed, onSpeedChange, voices, onVoiceChange }: ChatThreadProps) {
   const messages = useChatStore((state) => state.messages);
   const deleteMessage = useChatStore((state) => state.deleteMessage);
   const speakingMessageId = useChatStore((s) => s.speakingMessageId);
   const ttsEnabled = useSettingsStore((state) => state.ttsEnabled);
+  const selectedVoiceURI = useSettingsStore((state) => state.selectedVoiceURI);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll on every new message or streaming chunk
@@ -41,6 +46,11 @@ export function ChatThread({ repeat }: ChatThreadProps) {
               onDelete={() => deleteMessage(message.id)}
               ttsEnabled={ttsEnabled}
               onRepeat={() => repeat(message.id, message.content)}
+              ttsSpeed={ttsSpeed}
+              onSpeedChange={onSpeedChange}
+              voices={voices}
+              selectedVoiceURI={selectedVoiceURI}
+              onVoiceChange={onVoiceChange}
             />
           );
         })

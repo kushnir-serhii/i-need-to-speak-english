@@ -11,12 +11,16 @@ interface MessageMenuProps {
   onRepeat: () => void;
   ttsSpeed?: number;
   onSpeedChange?: (speed: number) => void;
+  voices?: SpeechSynthesisVoice[];
+  selectedVoiceURI?: string | null;
+  onVoiceChange?: (uri: string) => void;
 }
 
-export function MessageMenu({ content, onDelete, side = 'right', role, ttsEnabled, onRepeat, ttsSpeed = 1, onSpeedChange = () => {} }: MessageMenuProps) {
+export function MessageMenu({ content, onDelete, side = 'right', role, ttsEnabled, onRepeat, ttsSpeed = 1, onSpeedChange = () => {}, voices = [], selectedVoiceURI = null, onVoiceChange = () => {} }: MessageMenuProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
   const [isSpeedOpen, setIsSpeedOpen] = useState<boolean>(false);
+  const [isVoiceOpen, setIsVoiceOpen] = useState<boolean>(false);
 
   const menuRef = useRef<HTMLDivElement>(null);
   const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -135,6 +139,43 @@ export function MessageMenu({ content, onDelete, side = 'right', role, ttsEnable
                     onChange={(e) => onSpeedChange(parseFloat(e.target.value))}
                     className="w-full"
                   />
+                </div>
+              )}
+
+              {/* Voice selector */}
+              <button
+                type="button"
+                role="menuitem"
+                onClick={() => setIsVoiceOpen((prev) => !prev)}
+                className="w-full text-left px-3 py-1.5 text-sm text-white hover:bg-[#30363D] transition-colors duration-100 focus:outline-none focus-visible:bg-[#30363D]"
+              >
+                {voices.find((v) => v.voiceURI === selectedVoiceURI)?.name ?? 'Voice'}
+              </button>
+              {isVoiceOpen && (
+                <div className="max-h-40 overflow-y-auto">
+                  {voices.length === 0 ? (
+                    <div className="px-3 py-1.5 text-sm text-[#8B949E] cursor-default select-none">
+                      No voices available
+                    </div>
+                  ) : (
+                    voices.map((voice) => {
+                      const isSelected = voice.voiceURI === selectedVoiceURI;
+                      return (
+                        <button
+                          key={voice.voiceURI}
+                          type="button"
+                          role="menuitem"
+                          onClick={() => {
+                            onVoiceChange(voice.voiceURI);
+                            setIsVoiceOpen(false);
+                          }}
+                          className={`w-full text-left px-3 py-1.5 text-sm hover:bg-[#30363D] transition-colors duration-100 focus:outline-none focus-visible:bg-[#30363D] ${isSelected ? 'text-[#2F81F7]' : 'text-white'}`}
+                        >
+                          {isSelected ? `✓ ${voice.name}` : voice.name}
+                        </button>
+                      );
+                    })
+                  )}
                 </div>
               )}
             </>
