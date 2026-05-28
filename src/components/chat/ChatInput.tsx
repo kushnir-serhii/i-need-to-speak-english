@@ -72,6 +72,9 @@ export function ChatInput({
     const userContent = (overrideValue ?? inputValue).trim();
     if (!userContent) return;
 
+    // Ensure a session ID exists for this conversation
+    useChatStore.getState().initSessionId();
+
     // Clear textarea immediately
     setInputValue('');
 
@@ -106,6 +109,9 @@ export function ChatInput({
           visitorId,
           ...(useSettingsStore.getState().apiKey !== '' && {
             apiKey: useSettingsStore.getState().apiKey,
+          }),
+          ...(useSettingsStore.getState().targetLanguage && {
+            targetLanguage: useSettingsStore.getState().targetLanguage,
           }),
         }),
         signal: controller.signal,

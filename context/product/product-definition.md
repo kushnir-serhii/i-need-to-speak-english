@@ -1,7 +1,7 @@
 # Product Definition: INTSE (I Need to Speak English)
 
-- **Version:** 1.0
-- **Status:** Proposed
+- **Version:** 1.1
+- **Status:** In Progress
 
 ---
 
@@ -27,6 +27,11 @@ Non-native speakers of any language who want to practice conversational fluency 
   - **Goal:** Use his own key for unlimited practice sessions and track exactly how many tokens each session costs.
   - **Frustration:** Generic chatbots don't follow a language-learning prompt; he wants a default system prompt tuned for language practice.
 
+- **Persona 3: "Serhii the Owner"**
+  - **Role:** App owner and admin; accesses the app via the same `/login` page as other users. Their role is stored in MongoDB — the DB record determines admin access.
+  - **Goal:** Monitor visitor activity, reset daily counters for specific visitors, and use the app with no usage limits.
+  - **Frustration:** Wants visibility into how many people use the app and the ability to help a visitor who has hit their daily limit.
+
 ### 1.4. Success Metrics
 
 - Users can complete a full voice conversation (STT → AI → TTS) without errors in the browser.
@@ -40,7 +45,9 @@ Non-native speakers of any language who want to practice conversational fluency 
 
 ### 2.1. Core Features
 
-1. **Anonymous auto-enrollment** — No registration, no login, no form of any kind. When someone opens the app for the first time, they are silently assigned an invisible visitor ID stored in their browser. A daily cap controls how many new visitors can be enrolled per day. A one-time optional name prompt ("What's your name?") personalises the greeting — the name is saved on-device only, never sent to the server.
+1. **Two-tier identity system**
+   - *Regular visitors (USER role):* No registration, no login, no form of any kind. When someone opens the app for the first time, they are silently assigned an invisible visitor ID stored in their browser. A daily cap controls how many new visitors can be enrolled per day. A one-time optional name prompt ("What's your name?") personalises the greeting — the name is saved on-device only, never sent to the server.
+   - *Admin (ADMIN role):* Navigates to `/login`, enters a username and password, and receives a 24-hour HTTP-only JWT cookie. The role is stored in MongoDB — the DB record determines admin access. Admins are subject to no daily limits and gain exclusive access to the Admin Panel.
 
 2. **Two API-key modes**
    - *Default key mode:* The app uses the owner's API key. Per-user daily limits (request count + token budget) are enforced via MongoDB counters.
@@ -56,31 +63,46 @@ Non-native speakers of any language who want to practice conversational fluency 
    - A hard-coded default prompt lives in the codebase (language-learning focused).
    - Users can write a custom prompt in a textarea on the dashboard; it is saved to browser storage (IndexedDB / localStorage) and used instead of the default when present.
 
-5. **Dashboard**
+5. **Dashboard** (personal — available to all roles)
    - Select the target language to practice (any language — free-text or searchable list drawn from the browser's available TTS voices).
    - Toggle between default system prompt and the user's custom prompt.
    - View and browse full chat history (stored in browser DB).
    - Token usage counter (for BYO-key users) or daily limit indicator (for default-key users).
 
-6. **Universal popup / notification system**
+6. **Admin Panel** (ADMIN role only — at `/admin`)
+   - KPI summary cards: total visitors enrolled, visitors active today, messages sent today, tokens consumed today.
+   - Bar chart of today's top visitors by message count.
+   - Per-visitor usage table with individual daily request and token counts.
+   - Reset button per visitor — immediately zeroes their daily counters so they can continue chatting before midnight UTC.
+   - Global settings display (read-only; settings editor deferred to a future spec — values currently live in env vars).
+
+7. **Universal popup / notification system**
    - A reusable popup component for alerts, limit warnings, confirmations, and informational messages.
    - Used throughout the app for consistent UX.
 
-7. **Usage control via MongoDB**
+8. **Usage control via MongoDB**
    - Records per-user request count and token usage, reset daily.
    - Counts total unique users per day for monitoring.
    - Enforced server-side in Next.js API routes before proxying the AI request.
 
 ### 2.2. User Journey
 
-1. User opens the app and enters their name → logged in (record created or matched in MongoDB).
-2. User lands on the **Dashboard** — selects their target language, optionally edits the system prompt.
-3. User starts a **chat session** — types or speaks a message.
-4. App checks MongoDB limits (default-key mode) → sends request to AI → streams response.
-5. AI response appears as a chat bubble; TTS reads it aloud automatically (or on demand).
-6. User can tap the three-dot menu on any message to adjust voice speed, switch voice, repeat, copy, or delete.
-7. Session ends; full history is saved to browser DB and visible in the Dashboard history tab.
+**Regular Visitor (USER role):**
+1. User opens the app — silently auto-enrolled; a visitor ID is stored in the browser.
+2. User lands on the **Chat** page — types or speaks a message.
+3. App checks MongoDB daily limits → sends request to AI → streams response.
+4. AI response appears as a chat bubble; TTS reads it aloud automatically (or on demand).
+5. User can tap the three-dot menu on any message to adjust voice speed, switch voice, repeat, copy, or delete.
+6. User visits **Dashboard** to set language, manage their custom prompt, or view usage.
+7. Session ends; full history is saved to browser DB.
 8. Next day, MongoDB counters reset; user can start fresh.
+
+**Admin (ADMIN role):**
+1. Admin navigates to `/login`, enters username + password.
+2. On success, issued a 24-hour HTTP-only JWT cookie; redirected to Chat with full admin access.
+3. Chat is never blocked by daily limits.
+4. Admin visits **Admin Panel** to monitor visitor activity, view per-visitor usage, and reset individual counters.
+5. Admin clicks **Sign out** → JWT cookie cleared → redirected to `/login`.
 
 ---
 
@@ -88,13 +110,15 @@ Non-native speakers of any language who want to practice conversational fluency 
 
 ### 3.1. What's In-Scope for this Version
 
-- Name-based login backed by MongoDB (no passwords, no OAuth).
-- Default API key with per-user daily limits (request count + token budget) enforced in MongoDB.
+- Two-tier identity: anonymous visitor auto-enrollment (USER role) + named admin login via `/login` with bcrypt + JWT (ADMIN role). Role stored in MongoDB — DB record determines access level.
+- Default API key with per-user daily limits (request count + token budget) enforced in MongoDB; admin role bypasses all limits.
 - BYO API key mode with informational token counter.
 - AI chat UI with text input, STT input, and TTS output.
 - Per-message three-dot menu (speed, voice, repeat, copy, delete).
 - Custom system prompt saved to browser storage.
-- Dashboard: language selector, prompt toggle, chat history browser, usage indicator.
+- Personal Dashboard (`/dashboard`): language selector, prompt toggle, chat history browser, usage indicator — same content for USER and ADMIN.
+- Admin Panel (`/admin`): KPI cards, visitor activity chart, per-visitor usage table with reset action.
+- Role-aware navigation: USER sees Chat + Dashboard + Sign out; ADMIN additionally sees Admin Panel.
 - Universal popup/notification component.
 - Responsive, mobile-first layout.
 - Deployment on Vercel free tier with MongoDB Atlas free tier as the external DB.
@@ -107,4 +131,5 @@ Non-native speakers of any language who want to practice conversational fluency 
 - Automated grammar scoring or correction engine.
 - Server-side chat history storage (history lives in browser DB only).
 - Multi-device sync of chat history or custom prompts.
-- Admin panel UI (usage monitoring is done directly via MongoDB queries for now).
+- Admin Panel settings editor (daily visitor cap, per-visitor request limit, token budget currently live in env vars; a dedicated settings editor is deferred to a future spec).
+- Global settings editor in Admin Panel (deferred — env vars only for now).

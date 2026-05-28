@@ -3,7 +3,7 @@ import { Navigation } from '@/components/common';
 
 export const Sidebar: React.FC = () => {
   return (
-    <aside className="fixed bottom-0 z-50 w-screen flex-col p-3 md:relative md:flex xl:min-h-full md:w-[74px]">
+    <aside className="fixed bottom-0 z-50 w-screen flex-col p-3 md:relative md:flex xl:min-h-full md:w-18.5">
       <div className="hidden md:block">
         <Logo />
       </div>

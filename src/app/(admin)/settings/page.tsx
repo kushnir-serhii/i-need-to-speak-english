@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useSettingsStore } from '@/store/useSettingsStore';
 import { useChatStore } from '@/store/useChatStore';
 import { useNotification } from '@/hooks/useNotification';
@@ -15,12 +15,64 @@ export default function SettingsPage() {
   const selectedVoiceURI = useSettingsStore((s) => s.selectedVoiceURI);
   const setSelectedVoiceURI = useSettingsStore((s) => s.setSelectedVoiceURI);
   const targetLanguage = useSettingsStore((s) => s.targetLanguage);
+  const setTargetLanguage = useSettingsStore((s) => s.setTargetLanguage);
   const sessionTokens = useChatStore((s) => s.sessionTokens);
   const { toast } = useNotification();
 
   const { isSupported, voices } = useTTS({ targetLanguage });
 
   const [inputValue, setInputValue] = useState<string>(apiKey);
+  const [langSearch, setLangSearch] = useState<string>(targetLanguage);
+  const [langFocused, setLangFocused] = useState<boolean>(false);
+
+  const displayNames = useMemo(
+    () => new Intl.DisplayNames('en', { type: 'language' }),
+    [],
+  );
+
+  const availableLanguages = useMemo<string[]>(() => {
+    if (voices.length === 0) return [];
+    const seen = new Set<string>();
+    const result: string[] = [];
+    for (const voice of voices) {
+      const primaryTag = voice.lang.split('-')[0];
+      let name: string;
+      try {
+        name = displayNames.of(primaryTag) ?? primaryTag;
+      } catch {
+        name = primaryTag;
+      }
+      if (!seen.has(name)) {
+        seen.add(name);
+        result.push(name);
+      }
+    }
+    return result.sort((a, b) => a.localeCompare(b));
+  }, [voices, displayNames]);
+
+  const filteredLanguages = useMemo<string[]>(() => {
+    const query = langSearch.trim().toLowerCase();
+    if (!query) return availableLanguages;
+    return availableLanguages.filter((lang) =>
+      lang.toLowerCase().includes(query),
+    );
+  }, [availableLanguages, langSearch]);
+
+  function handleLangFocus(): void {
+    setLangFocused(true);
+    setLangSearch('');
+  }
+
+  function handleLangBlur(): void {
+    setLangFocused(false);
+    setLangSearch(targetLanguage);
+  }
+
+  function handleLangSelect(lang: string): void {
+    setTargetLanguage(lang);
+    setLangSearch(lang);
+    setLangFocused(false);
+  }
 
   function handleSave(): void {
     setApiKey(inputValue);
@@ -36,7 +88,7 @@ export default function SettingsPage() {
   return (
     <div className="flex flex-1 flex-col overflow-y-auto bg-[#0D1117] px-4 py-8 sm:px-8">
       <h1
-        className="mb-8 font-[var(--font-inter)] text-2xl font-bold text-[#F0F6FC]"
+        className="mb-8 font-[--font-inter] text-2xl font-bold text-[#F0F6FC]"
       >
         Settings
       </h1>
@@ -91,9 +143,50 @@ export default function SettingsPage() {
         <h2 className="text-base font-semibold text-[#F0F6FC]">Appearance</h2>
       </section>
 
-      {/* Language (placeholder) */}
+      {/* Language */}
       <section className="mb-8 rounded-lg border border-[#30363D] bg-[#161B22] p-6">
-        <h2 className="text-base font-semibold text-[#F0F6FC]">Language</h2>
+        <h2 className="mb-1 text-base font-semibold text-[#F0F6FC]">Language</h2>
+        <p className="mb-4 text-sm text-[#8B949E]">
+          Choose the language you want to practise.
+        </p>
+
+        {availableLanguages.length === 0 ? (
+          <p className="text-sm text-[#8B949E]">No voices available in your browser.</p>
+        ) : (
+          <div className="relative">
+            <input
+              type="text"
+              value={langSearch}
+              onChange={(e) => setLangSearch(e.target.value)}
+              onFocus={handleLangFocus}
+              onBlur={handleLangBlur}
+              placeholder="Search language…"
+              className="w-full rounded-md border border-[#30363D] bg-[#0D1117] px-3 py-2 text-sm text-[#F0F6FC] placeholder-[#8B949E] outline-none focus:border-[#2F81F7] focus:ring-1 focus:ring-[#2F81F7]"
+            />
+            {langFocused && filteredLanguages.length > 0 && (
+              <ul className="absolute z-10 mt-1 max-h-48 w-full overflow-y-auto rounded-md border border-[#30363D] bg-[#161B22] py-1 shadow-lg">
+                {filteredLanguages.map((lang) => (
+                  <li key={lang}>
+                    <button
+                      type="button"
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        handleLangSelect(lang);
+                      }}
+                      className={`w-full px-3 py-2 text-left text-sm hover:bg-[#21262D] ${
+                        lang === targetLanguage
+                          ? 'font-semibold text-[#2F81F7]'
+                          : 'text-[#F0F6FC]'
+                      }`}
+                    >
+                      {lang}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
       </section>
 
       {/* Text to Speech */}

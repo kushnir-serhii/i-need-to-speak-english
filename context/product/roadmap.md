@@ -62,8 +62,8 @@ _Layer in the full voice loop that makes INTSE a speaking practice tool, not jus
     - [x] **Copy:** Copy the message text to the clipboard.
     - [x] **Delete:** Remove the message from the conversation view (and browser DB).
 
-- [ ] **Language Selector**
-  - [ ] **Target language picker:** Let users choose any language to practice; the selection filters the available TTS voices and is passed to the AI as part of the system prompt context.
+- [x] **Language Selector**
+  - [x] **Target language picker:** Let users choose any language to practice; the selection filters the available TTS voices and is passed to the AI as part of the system prompt context.
 
 ---
 
@@ -71,9 +71,9 @@ _Layer in the full voice loop that makes INTSE a speaking practice tool, not jus
 
 _Give users control over their experience and a way to review their progress over time._
 
-- [ ] **Chat History Persistence**
-  - [ ] **Browser DB storage (IndexedDB):** Save the full conversation history to IndexedDB so it persists across sessions on the same device.
-  - [ ] **History browser on dashboard:** Display a list of past conversations with timestamps; allow the user to open and read any previous session.
+- [x] **Chat History Persistence**
+  - [x] **Server-side storage (MongoDB):** Save the full conversation history to MongoDB tied to the visitor's identity, persisting across devices and browser clears.
+  - [x] **History browser at /history:** Display a list of past conversations with timestamps and message preview; allow the user to open, continue, or delete any previous session.
 
 - [ ] **Dashboard**
   - [ ] **Usage indicator:** Show the user's current daily usage (requests used / limit, tokens used / budget) for default-key mode, or running token totals for BYO-key mode.

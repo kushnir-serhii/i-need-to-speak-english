@@ -1,10 +1,11 @@
 import { NextRequest } from 'next/server'
 import OpenAI from 'openai'
 import { getOpenAIClient } from '@/lib/openai'
-import { DEFAULT_SYSTEM_PROMPT } from '@/lib/systemPrompt'
+import { buildSystemPrompt } from '@/lib/systemPrompt'
 import { connectDB } from '@/lib/mongodb'
 import Visitor from '@/lib/db/models/Visitor'
 import { resetIfNeeded } from '@/lib/db/resetIfNeeded'
+import { verifySession } from '@/lib/auth/verifySession'
 
 const BYO_KEY_PATTERN = /^sk-[A-Za-z0-9\-_]{20,}$/
 
@@ -40,7 +41,7 @@ export async function POST(request: NextRequest): Promise<Response> {
       return jsonError(400, 'invalid_request', 'messages array and visitorId are required')
     }
 
-    const { messages, visitorId } = body as Record<string, unknown>
+    const { messages, visitorId, targetLanguage } = body as Record<string, unknown>
 
     if (!Array.isArray(messages) || typeof visitorId !== 'string' || !visitorId.trim()) {
       return jsonError(400, 'invalid_request', 'messages array and visitorId are required')
@@ -79,34 +80,39 @@ export async function POST(request: NextRequest): Promise<Response> {
       byoKey = apiKey
     }
 
-    await connectDB()
-    const visitor = await Visitor.findOne({ visitorId })
-    if (!visitor) {
-      return jsonError(404, 'not_found', 'Visitor not found')
-    }
+    const adminSession = await verifySession(request)
+    const isAdmin = adminSession?.role === 'admin'
 
-    const freshVisitor = await resetIfNeeded(visitor)
+    if (!isAdmin) {
+      await connectDB()
+      const visitor = await Visitor.findOne({ visitorId })
+      if (!visitor) {
+        return jsonError(404, 'not_found', 'Visitor not found')
+      }
 
-    // Only enforce daily limits in Free mode (no BYO key)
-    if (!byoKey) {
-      const limitEnv = process.env.DAILY_REQUEST_LIMIT
-      const parsedLimit = parseInt(limitEnv ?? '', 10)
-      const dailyRequestLimit = Number.isFinite(parsedLimit) ? parsedLimit : 20
+      const freshVisitor = await resetIfNeeded(visitor)
 
-      if (freshVisitor.dailyRequests >= dailyRequestLimit) {
-        return new Response(
-          JSON.stringify({
-            error: 'daily_limit_exceeded',
-            dailyRequests: freshVisitor.dailyRequests,
-            dailyRequestLimit,
-          }),
-          { status: 429, headers: { 'Content-Type': 'application/json' } }
-        )
+      // Only enforce daily limits in Free mode (no BYO key)
+      if (!byoKey) {
+        const limitEnv = process.env.DAILY_REQUEST_LIMIT
+        const parsedLimit = parseInt(limitEnv ?? '', 10)
+        const dailyRequestLimit = Number.isFinite(parsedLimit) ? parsedLimit : 20
+
+        if (freshVisitor.dailyRequests >= dailyRequestLimit) {
+          return new Response(
+            JSON.stringify({
+              error: 'daily_limit_exceeded',
+              dailyRequests: freshVisitor.dailyRequests,
+              dailyRequestLimit,
+            }),
+            { status: 429, headers: { 'Content-Type': 'application/json' } }
+          )
+        }
       }
     }
 
-    // Use one-off client for BYO key; singleton for Free mode
-    const openai = byoKey ? new OpenAI({ apiKey: byoKey }) : getOpenAIClient()
+    // Admins always use the default client (no limits); non-admins use BYO or default
+    const openai = (!isAdmin && byoKey) ? new OpenAI({ apiKey: byoKey }) : getOpenAIClient()
 
     let stream: Awaited<ReturnType<typeof openai.chat.completions.create>>
     try {
@@ -116,7 +122,7 @@ export async function POST(request: NextRequest): Promise<Response> {
         stream_options: { include_usage: true },
         max_tokens: 1024,
         messages: [
-          { role: 'system', content: DEFAULT_SYSTEM_PROMPT },
+          { role: 'system', content: buildSystemPrompt(typeof targetLanguage === 'string' && targetLanguage.trim() ? targetLanguage : 'English') },
           ...typedMessages,
         ],
       })
@@ -159,10 +165,13 @@ export async function POST(request: NextRequest): Promise<Response> {
           controller.close()
 
           // Fire-and-forget counter increment (do not await)
-          Visitor.findOneAndUpdate(
-            { visitorId },
-            { $inc: { dailyRequests: 1, dailyTokens: totalTokens } }
-          ).catch(console.error)
+          // For admins, only increment if a visitorId was provided
+          if (visitorId) {
+            Visitor.findOneAndUpdate(
+              { visitorId },
+              { $inc: { dailyRequests: 1, dailyTokens: totalTokens } }
+            ).catch(console.error)
+          }
         } catch (err: unknown) {
           controller.error(err)
         }
