@@ -8,7 +8,7 @@
 
 @theme {
     --font-*: initial;
-    --font-family: var(--font-inter), sans-serif;
+    --font-family: var(--font-urbanist), sans-serif;
     --font-secondary: var(--font-mono), monospace;
 
     --breakpoint-*: initial;

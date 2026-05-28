@@ -40,46 +40,66 @@ export default function EnrollmentGate({ children }: { children: React.ReactNode
   const [showPrompt, setShowPrompt] = useState(false);
 
   useEffect(() => {
-    const visitorId = useUserStore.getState().visitorId;
+    async function checkAccess() {
+      // Step 1: check for an active owner session (JWT cookie)
+      try {
+        const meRes = await fetch('/api/owner/me');
+        if (meRes.ok) {
+          const meData = await meRes.json() as { role: string };
+          useUserStore.getState().setRoleFromApi(meData.role);
+          setStatus('enrolled');
+          return;
+        }
+      } catch {
+        // Network error — fall through to visitor enrollment
+      }
 
-    if (visitorId !== null) {
-      // Returning visitor — fetch updated stats
-      fetch(`/api/stats?visitorId=${visitorId}`)
-        .then((res) => res.json())
-        .then((data: { count: number; cap: number; dailyRequests: number; dailyRequestLimit: number }) => {
-          useUserStore.getState().updateStats(
-            data.count,
-            data.cap,
-            data.dailyRequests,
-            data.dailyRequestLimit,
-          );
-          setStatus('enrolled');
-        })
-        .catch(() => {
-          // Fail open — don't block the user for a network error
-          setStatus('enrolled');
-        });
-    } else {
-      // New visitor — attempt enrollment
-      fetch('/api/enroll', { method: 'POST' })
-        .then((res) => res.json())
-        .then((data: { enrolled: boolean; visitorId?: string; count: number; cap: number }) => {
-          if (data.enrolled && data.visitorId) {
-            useUserStore.getState().enroll(data.visitorId, data.count, data.cap);
-            if (!useSettingsStore.getState().hasSeenNamePrompt) {
-              setShowPrompt(true);
-            }
+      // Step 2: normal visitor enrollment
+      const visitorId = useUserStore.getState().visitorId;
+
+      if (visitorId !== null) {
+        // Returning visitor — fetch updated stats
+        fetch(`/api/stats?visitorId=${visitorId}`)
+          .then((res) => res.json())
+          .then((data: { count: number; cap: number; dailyRequests: number; dailyRequestLimit: number }) => {
+            useUserStore.getState().updateStats(
+              data.count,
+              data.cap,
+              data.dailyRequests,
+              data.dailyRequestLimit,
+            );
+            useUserStore.getState().setRole('user');
             setStatus('enrolled');
-          } else {
-            setCappedData({ count: data.count, cap: data.cap });
-            setStatus('capped');
-          }
-        })
-        .catch(() => {
-          // Fail open — don't block the user for a network error
-          setStatus('enrolled');
-        });
+          })
+          .catch(() => {
+            useUserStore.getState().setRole('user');
+            setStatus('enrolled');
+          });
+      } else {
+        // New visitor — attempt enrollment
+        fetch('/api/enroll', { method: 'POST' })
+          .then((res) => res.json())
+          .then((data: { enrolled: boolean; visitorId?: string; count: number; cap: number }) => {
+            if (data.enrolled && data.visitorId) {
+              useUserStore.getState().enroll(data.visitorId, data.count, data.cap);
+              useUserStore.getState().setRole('user');
+              if (!useSettingsStore.getState().hasSeenNamePrompt) {
+                setShowPrompt(true);
+              }
+              setStatus('enrolled');
+            } else {
+              setCappedData({ count: data.count, cap: data.cap });
+              setStatus('capped');
+            }
+          })
+          .catch(() => {
+            useUserStore.getState().setRole('user');
+            setStatus('enrolled');
+          });
+      }
     }
+
+    void checkAccess();
   }, []);
 
   if (status === 'loading') {

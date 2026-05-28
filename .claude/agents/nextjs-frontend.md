@@ -17,7 +17,7 @@ Key responsibilities:
 - Build the per-message three-dot context menu (speed slider, voice selector, repeat, copy, delete).
 - Build the universal `Popup` component and wire it to all limit/error scenarios.
 - Keep all layouts responsive and mobile-first using Tailwind v4 utility classes.
-- Store chat history and user settings in IndexedDB via `idb-keyval`; never store them server-side.
+- Persist the active chat session in localStorage via Zustand `persist` middleware (key: `intse-chat`); persist settings (language, prompt, TTS) under `intse-settings`. Never use `idb-keyval` — it is removed from the project.
 - Never import the `openai` package or call OpenAI directly from client components — all AI calls go through `/api/chat`.
 
 When working on tasks:

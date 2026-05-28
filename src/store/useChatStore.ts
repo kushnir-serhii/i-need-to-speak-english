@@ -1,6 +1,7 @@
 'use client';
 
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 export interface Message {
   id: string;
@@ -16,6 +17,8 @@ interface ChatState {
   sessionTokens: number;
   autoDialogActive: boolean;
   speakingMessageId: string | null;
+  sessionId: string | null;
+  sessionSaved: boolean;
   addMessage: (role: Message['role'], content: string, streaming?: boolean) => string;
   setStreaming: (value: boolean) => void;
   clearMessages: () => void;
@@ -25,14 +28,21 @@ interface ChatState {
   setAutoDialogActive: (v: boolean) => void;
   setSpeakingMessageId: (id: string | null) => void;
   deleteMessage: (id: string) => void;
+  initSessionId: () => void;
+  setSessionSaved: (value: boolean) => void;
+  loadSession: (messages: Message[], sessionId: string) => void;
 }
 
-export const useChatStore = create<ChatState>()((set) => ({
+export const useChatStore = create<ChatState>()(
+  persist(
+    (set) => ({
   messages: [],
   isStreaming: false,
   sessionTokens: 0,
   autoDialogActive: false,
   speakingMessageId: null,
+  sessionId: null,
+  sessionSaved: false,
 
   addMessage: (role, content, streaming = false) => {
     const id = crypto.randomUUID();
@@ -49,7 +59,14 @@ export const useChatStore = create<ChatState>()((set) => ({
 
   setStreaming: (value) => set({ isStreaming: value }),
 
-  clearMessages: () => set({ messages: [] }),
+  clearMessages: () => set({ messages: [], sessionId: null, sessionSaved: false }),
+
+  setSessionSaved: (value) => set({ sessionSaved: value }),
+
+  initSessionId: () =>
+    set((state) => ({
+      sessionId: state.sessionId ?? crypto.randomUUID(),
+    })),
 
   appendChunk: (id, chunk) =>
     set((state) => ({
@@ -78,4 +95,25 @@ export const useChatStore = create<ChatState>()((set) => ({
       messages: state.messages.filter((msg) => msg.id !== id),
       speakingMessageId: state.speakingMessageId === id ? null : state.speakingMessageId,
     })),
-}));
+
+  loadSession: (messages, sessionId) =>
+    set({ messages, sessionId, sessionSaved: false }),
+    }),
+    {
+      name: 'intse-chat',
+      partialize: (state) => ({
+        messages: state.messages,
+        sessionId: state.sessionId,
+      }),
+      onRehydrateStorage: () => (state) => {
+        if (!state) return;
+        const hasStreamingMessages = state.messages.some((m) => m.isStreaming);
+        if (hasStreamingMessages) {
+          state.messages = state.messages.map((m) =>
+            m.isStreaming ? { ...m, isStreaming: false } : m,
+          );
+        }
+      },
+    },
+  ),
+);
