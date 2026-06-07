@@ -75,7 +75,7 @@ _Give users control over their experience and a way to review their progress ove
   - [x] **Server-side storage (MongoDB):** Save the full conversation history to MongoDB tied to the visitor's identity, persisting across devices and browser clears.
   - [x] **History browser at /history:** Display a list of past conversations with timestamps and message preview; allow the user to open, continue, or delete any previous session.
 
-- [ ] **Dashboard**
-  - [ ] **Usage indicator:** Show the user's current daily usage (requests used / limit, tokens used / budget) for default-key mode, or running token totals for BYO-key mode.
-  - [ ] **Language selector control:** Surface the target language picker prominently on the dashboard so users can change it before starting a session.
-  - [ ] **Prompt management:** Provide a textarea where users can write a custom system prompt, saved to browser storage, with a toggle to switch between the default and custom prompt.
+- [x] **Dashboard**
+  - [x] **Usage indicator:** Show the user's current daily usage (requests used / limit, tokens used / budget) for default-key mode, or running token totals for BYO-key mode.
+  - [x] **Language selector control:** Surface the target language picker prominently on the dashboard so users can change it before starting a session.
+  - [x] **Prompt management:** Provide a textarea where users can write a custom system prompt, saved to browser storage, with a toggle to switch between the default and custom prompt.

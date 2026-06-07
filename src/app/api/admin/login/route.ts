@@ -32,13 +32,13 @@ export async function POST(request: NextRequest): Promise<Response> {
     return Response.json({ error: 'invalid_credentials' }, { status: 401 })
   }
 
-  const token = await new SignJWT({ sub: admin.username, role: 'admin' })
+  const token = await new SignJWT({ sub: admin.username, role: admin.role })
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setExpirationTime('24h')
     .sign(JWT_SECRET)
 
-  const response = Response.json({ ok: true, role: 'admin' })
+  const response = Response.json({ ok: true, role: admin.role })
 
   // Set HTTP-only session cookie
   const headers = new Headers(response.headers)

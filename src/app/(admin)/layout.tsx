@@ -5,7 +5,7 @@ import { ToastContainer, ConfirmModal } from '@/components/ui';
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
     <EnrollmentGate>
-      <div className="flex min-h-screen">
+      <div className="flex min-h-screen pb-4">
         {/* Sidebar and Backdrop */}
         <Sidebar />
 
@@ -13,9 +13,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <Header />
 
           {/* Main Content */}
-          <main className="flex flex-1 flex-col min-h-0 overflow-hidden">
-            {children}
-          </main>
+          <main className="flex min-h-0 flex-1 flex-col overflow-hidden">{children}</main>
         </div>
       </div>
       <ToastContainer />

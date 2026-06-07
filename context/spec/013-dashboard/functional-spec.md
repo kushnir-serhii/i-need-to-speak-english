@@ -1,7 +1,7 @@
 # Functional Specification: Personal Dashboard
 
 - **Roadmap Item:** Phase 4 — Dashboard (Usage indicator, Language selector, Prompt management)
-- **Status:** Approved
+- **Status:** Completed
 - **Author:** Serhii Kushnir
 
 ---
@@ -30,11 +30,11 @@ Users on the shared key see how many messages they've sent today versus their da
 - No daily limit is shown because there isn't one.
 
 **Acceptance Criteria:**
-- [ ] Given I am a shared-key user, when I open the Dashboard, I see a message counter showing how many messages I've sent today out of my daily allowance (e.g., "12 / 20 messages today").
-- [ ] Given I am a shared-key user who has used 0 messages, the counter shows "0 / Y messages today."
-- [ ] Given I am a shared-key user who has hit the daily limit, the counter shows "Y / Y messages today" with no additional warning.
-- [ ] Given I am using my own API key, I see a token counter instead of a message counter (e.g., "4,318 tokens used").
-- [ ] Given I am using my own API key, no daily limit or allowance is shown.
+- [x] Given I am a shared-key user, when I open the Dashboard, I see a message counter showing how many messages I've sent today out of my daily allowance (e.g., "12 / 20 messages today").
+- [x] Given I am a shared-key user who has used 0 messages, the counter shows "0 / Y messages today."
+- [x] Given I am a shared-key user who has hit the daily limit, the counter shows "Y / Y messages today" with no additional warning.
+- [x] Given I am using my own API key, I see a token counter instead of a message counter (e.g., "4,318 tokens used").
+- [x] Given I am using my own API key, no daily limit or allowance is shown.
 
 ---
 
@@ -48,11 +48,11 @@ Users choose which language they want to practice. The selection determines whic
 - The language the user has currently selected is visibly highlighted or shown as the active choice in the picker.
 
 **Acceptance Criteria:**
-- [ ] Given I am on the Dashboard, I see a language selector showing the currently active language.
-- [ ] Given I select a different language, the current conversation is saved and the Chat page resets to a new, empty conversation.
-- [ ] Given I select a different language, no confirmation dialog is shown before the change takes effect.
-- [ ] Given I close the app and reopen it, the language I last selected is still shown as active.
-- [ ] Given I have not chosen a language previously, a sensible default language is pre-selected (e.g., English).
+- [x] Given I am on the Dashboard, I see a language selector showing the currently active language.
+- [x] Given I select a different language, the current conversation is saved and the Chat page resets to a new, empty conversation.
+- [x] Given I select a different language, no confirmation dialog is shown before the change takes effect.
+- [x] Given I close the app and reopen it, the language I last selected is still shown as active.
+- [x] Given I have not chosen a language previously, a sensible default language is pre-selected (e.g., English).
 
 ---
 
@@ -69,12 +69,12 @@ Users can write their own instruction for the AI and switch between it and the b
 - If the toggle is set to "Custom" but the text area is empty, the app behaves as if the toggle were set to "Default" — the built-in prompt is used.
 
 **Acceptance Criteria:**
-- [ ] Given I am on the Dashboard, I see a text area for writing a custom AI instruction and a toggle to choose between "Default" and "Custom."
-- [ ] Given the toggle is set to "Default," the built-in prompt is active and any text I've written in the text area is preserved but not in use.
-- [ ] Given I type a custom instruction and set the toggle to "Custom," the next message I send on the Chat page uses my custom instruction instead of the default.
-- [ ] Given I switch the toggle from "Custom" back to "Default," the text I wrote remains in the text area unchanged.
-- [ ] Given I type in the text area and navigate away, when I return to the Dashboard my text is still there.
-- [ ] Given the text area is empty and the toggle is set to "Custom," the AI uses the built-in default prompt (an empty custom instruction is treated as no custom instruction).
+- [x] Given I am on the Dashboard, I see a text area for writing a custom AI instruction and a toggle to choose between "Default" and "Custom."
+- [x] Given the toggle is set to "Default," the built-in prompt is active and any text I've written in the text area is preserved but not in use.
+- [x] Given I type a custom instruction and set the toggle to "Custom," the next message I send on the Chat page uses my custom instruction instead of the default.
+- [x] Given I switch the toggle from "Custom" back to "Default," the text I wrote remains in the text area unchanged.
+- [x] Given I type in the text area and navigate away, when I return to the Dashboard my text is still there.
+- [x] Given the text area is empty and the toggle is set to "Custom," the AI uses the built-in default prompt (an empty custom instruction is treated as no custom instruction).
 
 ---
 

@@ -43,10 +43,14 @@ export default function EnrollmentGate({ children }: { children: React.ReactNode
     async function checkAccess() {
       // Step 1: check for an active owner session (JWT cookie)
       try {
-        const meRes = await fetch('/api/owner/me');
+        const meRes = await fetch('/api/admin/me');
         if (meRes.ok) {
-          const meData = await meRes.json() as { role: string };
+          const meData = await meRes.json() as { role: string; sub: string };
           useUserStore.getState().setRoleFromApi(meData.role);
+          // Named users use their username as visitorId (no anonymous cookie)
+          if (meData.sub) {
+            useUserStore.getState().setVisitorId(meData.sub);
+          }
           setStatus('enrolled');
           return;
         }

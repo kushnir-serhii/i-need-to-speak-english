@@ -20,6 +20,7 @@ interface UserState {
   incrementRequests: () => void;
   setRole: (role: UserRole) => void;
   setRoleFromApi: (rawRole: string) => void;
+  setVisitorId: (id: string) => void;
   reset: () => void;
 }
 
@@ -54,6 +55,7 @@ export const useUserStore = create<UserState>()(
         const mapped: UserRole = rawRole === 'owner' || rawRole === 'admin' ? 'admin' : 'user';
         set({ role: mapped });
       },
+      setVisitorId: (id: string) => set({ visitorId: id }),
       reset: () => {
         set({
           visitorId: null,

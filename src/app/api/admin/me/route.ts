@@ -8,5 +8,5 @@ export async function GET(request: NextRequest): Promise<Response> {
     return Response.json({ error: 'unauthorized' }, { status: 401 })
   }
 
-  return Response.json({ role: session.role ?? 'admin' })
+  return Response.json({ role: session.role ?? 'admin', sub: session.sub })
 }

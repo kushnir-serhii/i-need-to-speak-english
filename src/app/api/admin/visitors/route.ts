@@ -50,7 +50,7 @@ export async function GET(request: NextRequest): Promise<Response> {
       limit: limitNum,
     })
   } catch (error: unknown) {
-    console.error('[GET /api/owner/visitors]', error)
+    console.error('[GET /api/admin/visitors]', error)
     return Response.json({ error: 'internal_server_error' }, { status: 500 })
   }
 }

@@ -41,7 +41,7 @@ export async function POST(request: NextRequest): Promise<Response> {
       return jsonError(400, 'invalid_request', 'messages array and visitorId are required')
     }
 
-    const { messages, visitorId, targetLanguage } = body as Record<string, unknown>
+    const { messages, visitorId, targetLanguage, customPrompt, useCustomPrompt } = body as Record<string, unknown>
 
     if (!Array.isArray(messages) || typeof visitorId !== 'string' || !visitorId.trim()) {
       return jsonError(400, 'invalid_request', 'messages array and visitorId are required')
@@ -69,6 +69,15 @@ export async function POST(request: NextRequest): Promise<Response> {
       }
     }
 
+    // Validate useCustomPrompt
+    if (useCustomPrompt !== undefined && typeof useCustomPrompt !== 'boolean') {
+      return jsonError(400, 'invalid_request', 'useCustomPrompt must be a boolean')
+    }
+
+    // Normalize customPrompt
+    const trimmedCustomPrompt =
+      typeof customPrompt === 'string' ? customPrompt.trim().slice(0, 2000) : ''
+
     const { apiKey } = body as Record<string, unknown>
 
     // BYO key validation
@@ -85,10 +94,11 @@ export async function POST(request: NextRequest): Promise<Response> {
 
     if (!isAdmin) {
       await connectDB()
-      const visitor = await Visitor.findOne({ visitorId })
-      if (!visitor) {
-        return jsonError(404, 'not_found', 'Visitor not found')
-      }
+      const visitor = await Visitor.findOneAndUpdate(
+        { visitorId },
+        { $setOnInsert: { visitorId, enrolledAt: new Date(), dailyRequests: 0, dailyTokens: 0, lastResetAt: new Date() } },
+        { upsert: true, new: true },
+      )
 
       const freshVisitor = await resetIfNeeded(visitor)
 
@@ -122,7 +132,13 @@ export async function POST(request: NextRequest): Promise<Response> {
         stream_options: { include_usage: true },
         max_tokens: 1024,
         messages: [
-          { role: 'system', content: buildSystemPrompt(typeof targetLanguage === 'string' && targetLanguage.trim() ? targetLanguage : 'English') },
+          {
+            role: 'system',
+            content:
+              useCustomPrompt === true && trimmedCustomPrompt.length > 0
+                ? trimmedCustomPrompt
+                : buildSystemPrompt(typeof targetLanguage === 'string' && targetLanguage.trim() ? targetLanguage : 'English'),
+          },
           ...typedMessages,
         ],
       })

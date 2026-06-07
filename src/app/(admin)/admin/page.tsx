@@ -72,7 +72,7 @@ export default function AdminPanelPage() {
       return;
     }
 
-    fetch('/api/owner/stats')
+    fetch('/api/admin/stats')
       .then((r) => {
         if (r.status === 401 || r.status === 403) {
           router.replace('/login');
@@ -88,7 +88,7 @@ export default function AdminPanelPage() {
   useEffect(() => {
     if (role !== null && role !== 'admin') return;
 
-    fetch('/api/owner/visitors?page=1&limit=50')
+    fetch('/api/admin/visitors?page=1&limit=50')
       .then((r) => {
         if (r.status === 401 || r.status === 403) {
           router.replace('/login');
@@ -104,7 +104,7 @@ export default function AdminPanelPage() {
   const handleReset = useCallback(async (visitorId: string): Promise<void> => {
     setResetting((prev) => new Set(prev).add(visitorId));
     try {
-      const r = await fetch(`/api/owner/visitors/${visitorId}/reset`, { method: 'POST' });
+      const r = await fetch(`/api/admin/visitors/${visitorId}/reset`, { method: 'POST' });
       if (!r.ok) {
         toast('error', 'Reset failed.');
         return;
