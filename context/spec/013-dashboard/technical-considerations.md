@@ -6,7 +6,7 @@ It is NOT a copy-paste implementation guide.
 # Technical Specification: Personal Dashboard
 
 - **Functional Specification:** `context/spec/013-dashboard/functional-spec.md`
-- **Status:** Approved
+- **Status:** Completed
 - **Author(s):** Serhii Kushnir
 
 ---

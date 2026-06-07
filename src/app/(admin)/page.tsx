@@ -12,6 +12,9 @@ import { useTTS } from '@/hooks/useTTS';
 import { useNotificationStore } from '@/store/useNotificationStore';
 
 export default function ChatPage() {
+  const [showLimitModal, setShowLimitModal] = useState(false);
+  const [showNewConvDialog, setShowNewConvDialog] = useState(false);
+
   const dailyRequests = useUserStore((s) => s.dailyRequests);
   const dailyRequestLimit = useUserStore((s) => s.dailyRequestLimit);
   const visitorId = useUserStore((s) => s.visitorId);
@@ -29,8 +32,6 @@ export default function ChatPage() {
   const setSessionSaved = useChatStore((s) => s.setSessionSaved);
 
   const addToast = useNotificationStore((s) => s.addToast);
-
-  const [showNewConvDialog, setShowNewConvDialog] = useState(false);
 
   const handleNewConversation = useCallback(() => {
     if (messages.length === 0) return;
@@ -67,9 +68,12 @@ export default function ChatPage() {
     setShowNewConvDialog(false);
   }, []);
 
-  const handleSpeedChange = useCallback((speed: number) => {
-    setTtsSpeed(speed);
-  }, [setTtsSpeed]);
+  const handleSpeedChange = useCallback(
+    (speed: number) => {
+      setTtsSpeed(speed);
+    },
+    [setTtsSpeed],
+  );
 
   const handleVoiceChange = useCallback((uri: string) => {
     setSelectedVoiceURI(uri);
@@ -79,7 +83,9 @@ export default function ChatPage() {
 
   useEffect(() => {
     const now = new Date();
-    const tomorrow = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1));
+    const tomorrow = new Date(
+      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1),
+    );
     const msUntilMidnight = tomorrow.getTime() - Date.now();
 
     const timerId = setTimeout(() => {
@@ -87,14 +93,18 @@ export default function ChatPage() {
       if (visitorId === null) return;
       fetch(`/api/stats?visitorId=${visitorId}`)
         .then((res) => res.json())
-        .then((data: { count: number; cap: number; dailyRequests: number; dailyRequestLimit: number }) => {
-          useUserStore.getState().updateStats(
-            data.count,
-            data.cap,
-            data.dailyRequests,
-            data.dailyRequestLimit,
-          );
-        })
+        .then(
+          (data: {
+            count: number;
+            cap: number;
+            dailyRequests: number;
+            dailyRequestLimit: number;
+          }) => {
+            useUserStore
+              .getState()
+              .updateStats(data.count, data.cap, data.dailyRequests, data.dailyRequestLimit);
+          },
+        )
         .catch(() => {
           // Fail silently — the user will see updated limits on their next request
         });
@@ -108,23 +118,26 @@ export default function ChatPage() {
   }, []);
 
   const role = useUserStore((s) => s.role);
-  const isLimitReached = role !== 'admin' && apiKey === '' && dailyRequests >= dailyRequestLimit;
-
-  const [showLimitModal, setShowLimitModal] = useState(false);
-
+  const isLimitReached = role === 'user' && dailyRequests > 0 && dailyRequests >= dailyRequestLimit;
   return (
-    <div className="flex flex-col h-full">
-      <div className="flex-none flex items-center justify-end px-4 py-2">
+    <div className="flex h-full flex-col">
+      <div className="flex flex-none items-center justify-end px-4 py-2">
         <button
           type="button"
           disabled={messages.length === 0}
           onClick={handleNewConversation}
-          className="px-3 py-1.5 rounded-lg text-sm font-medium border border-[#30363D] text-[#F0F6FC] hover:bg-[#21262D] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="rounded-lg border border-[#30363D] px-3 py-1.5 text-sm font-medium text-[#F0F6FC] transition-colors hover:bg-[#21262D] disabled:cursor-not-allowed disabled:opacity-40"
         >
           New conversation
         </button>
       </div>
-      <ChatThread repeat={repeat} ttsSpeed={ttsSpeed} onSpeedChange={handleSpeedChange} voices={voices} onVoiceChange={handleVoiceChange} />
+      <ChatThread
+        repeat={repeat}
+        ttsSpeed={ttsSpeed}
+        onSpeedChange={handleSpeedChange}
+        voices={voices}
+        onVoiceChange={handleVoiceChange}
+      />
       <div className="flex-none">
         <ChatStatusBar />
       </div>
@@ -141,41 +154,38 @@ export default function ChatPage() {
           if (!next) stop();
         }}
       />
-      <LimitReachedModal
-        isOpen={showLimitModal}
-        onClose={() => setShowLimitModal(false)}
-      />
+      <LimitReachedModal isOpen={showLimitModal} onClose={() => setShowLimitModal(false)} />
       {showNewConvDialog && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/60"
           onClick={handleCancelNewConv}
         >
           <div
-            className="bg-[#161B22] rounded-xl max-w-sm w-full mx-4 p-6 border border-[#30363D]"
+            className="mx-4 w-full max-w-sm rounded-xl border border-[#30363D] bg-[#161B22] p-6"
             onClick={(e) => e.stopPropagation()}
           >
-            <p className="text-sm text-[#8B949E] leading-relaxed mb-6">
+            <p className="mb-6 text-sm leading-relaxed text-[#8B949E]">
               Save this conversation before starting a new one?
             </p>
-            <div className="flex gap-3 justify-end">
+            <div className="flex justify-end gap-3">
               <button
                 type="button"
                 onClick={handleCancelNewConv}
-                className="px-4 py-2 rounded-lg text-sm font-medium border border-[#30363D] text-[#F0F6FC] hover:bg-[#21262D] transition-colors"
+                className="rounded-lg border border-[#30363D] px-4 py-2 text-sm font-medium text-[#F0F6FC] transition-colors hover:bg-[#21262D]"
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={handleDiscard}
-                className="px-4 py-2 rounded-lg text-sm font-medium border border-[#30363D] text-[#F0F6FC] hover:bg-[#21262D] transition-colors"
+                className="rounded-lg border border-[#30363D] px-4 py-2 text-sm font-medium text-[#F0F6FC] transition-colors hover:bg-[#21262D]"
               >
                 Discard
               </button>
               <button
                 type="button"
                 onClick={handleSave}
-                className="px-4 py-2 rounded-lg text-sm font-medium bg-[#2F81F7] hover:bg-blue-500 text-white transition-colors"
+                className="rounded-lg bg-[#2F81F7] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-500"
               >
                 Save
               </button>

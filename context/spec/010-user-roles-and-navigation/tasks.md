@@ -13,7 +13,7 @@ _Goal: the app continues to work exactly as before, but the internal role name i
 - [x] **Backend: update `/api/owner/login`** — always embed `role: 'admin'` in the JWT payload and response body (never read `admin.role` from the DB document). **[Agent: nextjs-backend]**
 - [x] **Backend: update `/api/owner/me`** — change the fallback from `payload.role ?? 'owner'` to `payload.role ?? 'admin'`. **[Agent: nextjs-backend]**
 - [x] **Backend: update `/api/owner/seed`** — create the document with `role: 'admin'`; return `{ role: 'admin' }`. **[Agent: nextjs-backend]**
-- [ ] **Data migration** — ⚠️ MANUAL: run `db.admins.updateMany({}, { $set: { role: 'admin' } })` in MongoDB Atlas shell before deploying. **[Agent: mongodb-database]**
+- [x] **Data migration** — ⚠️ MANUAL: no existing admin documents found in Atlas; migration not needed. Admin will be seeded fresh with `role: 'admin'` via `/api/admin/seed`. **[Agent: mongodb-database]**
 - [x] **Frontend: update `UserRole` type and add `setRoleFromApi` action in `useUserStore`** — change `UserRole` from `'user' | 'owner' | null` to `'user' | 'admin' | null`; add `setRoleFromApi(rawRole: string)` that maps `'owner'` or `'admin'` → `'admin'`, anything else → `'user'`, then calls `set`. **[Agent: nextjs-frontend]**
 - [x] **Frontend: update `EnrollmentGate`** — replace `setRole(meData.role)` with `setRoleFromApi(meData.role)`. **[Agent: nextjs-frontend]**
 - [x] **Frontend: update `LoginPage`** — replace `setRole(data.role)` with `setRoleFromApi(data.role)`; update the response type cast to accept `string`. **[Agent: nextjs-frontend]**

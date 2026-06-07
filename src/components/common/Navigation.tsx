@@ -33,11 +33,12 @@ export const Navigation: React.FC = () => {
 
   async function handleSignOut(): Promise<void> {
     if (role === 'admin') {
-      await fetch('/api/owner/logout', { method: 'POST' });
+      await fetch('/api/admin/logout', { method: 'POST' });
       useUserStore.getState().setRole(null);
       router.push('/login');
     } else {
       useUserStore.getState().reset();
+      router.push('/login');
     }
   }
 

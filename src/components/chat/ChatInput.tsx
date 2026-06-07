@@ -113,6 +113,8 @@ export function ChatInput({
           ...(useSettingsStore.getState().targetLanguage && {
             targetLanguage: useSettingsStore.getState().targetLanguage,
           }),
+          customPrompt: useSettingsStore.getState().customPrompt,
+          useCustomPrompt: useSettingsStore.getState().useCustomPrompt,
         }),
         signal: controller.signal,
       });

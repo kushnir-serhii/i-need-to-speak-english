@@ -23,5 +23,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard', '/api/owner/stats'],
+  matcher: ['/api/admin/stats'],
 }

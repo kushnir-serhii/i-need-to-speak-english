@@ -39,7 +39,7 @@ export async function POST(
       lastResetAt: result.lastResetAt.toISOString(),
     })
   } catch (error: unknown) {
-    console.error('[POST /api/owner/visitors/[visitorId]/reset]', error)
+    console.error('[POST /api/admin/visitors/[visitorId]/reset]', error)
     return Response.json({ error: 'internal_server_error' }, { status: 500 })
   }
 }

@@ -21,6 +21,10 @@ interface SettingsState {
   setTargetLanguage: (lang: string) => void;
   ttsSpeed: number;
   setTtsSpeed: (speed: number) => void;
+  customPrompt: string;
+  useCustomPrompt: boolean;
+  setCustomPrompt: (prompt: string) => void;
+  setUseCustomPrompt: (active: boolean) => void;
 }
 
 export const useSettingsStore = create<SettingsState>()(
@@ -67,6 +71,10 @@ export const useSettingsStore = create<SettingsState>()(
         set({ targetLanguage: lang, selectedVoiceURI: null });
       },
       setTtsSpeed: (speed: number) => set({ ttsSpeed: Math.min(2.0, Math.max(0.5, speed)) }),
+      customPrompt: '',
+      useCustomPrompt: false,
+      setCustomPrompt: (prompt: string) => set({ customPrompt: prompt }),
+      setUseCustomPrompt: (active: boolean) => set({ useCustomPrompt: active }),
     }),
     {
       name: 'intse-settings',
