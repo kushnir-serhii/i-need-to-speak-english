@@ -35,7 +35,7 @@ export const useSettingsStore = create<SettingsState>()(
       visitorName: null,
       hasSeenNamePrompt: false,
       apiKey: '',
-      ttsEnabled: false,
+      ttsEnabled: true,
       selectedVoiceURI: null,
       ttsSpeed: 1,
       toggleTheme: () => {

@@ -4,6 +4,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { IconHome, IconLogout } from '@/assets/icons';
 import { ButtonOrLink } from '@/components/ui';
 import { useUserStore } from '@/store/useUserStore';
+import { IoSettingsOutline } from 'react-icons/io5';
 
 function IconDashboard({ className }: { className?: string }) {
   return (
@@ -50,6 +51,16 @@ export const Navigation: React.FC = () => {
             <IconHome className="size-5 dark:text-white" />
           </ButtonOrLink>
         </li>
+        <li className="flex items-center justify-center">
+          <ButtonOrLink
+            href="/settings"
+            isActive={pathname === '/settings'}
+            aria-label="Settings"
+            variant="ghost"
+          >
+            <IoSettingsOutline className="size-5 dark:text-white" />
+          </ButtonOrLink>
+        </li>
         {role !== null && (
           <li className="flex items-center justify-center">
             <ButtonOrLink
@@ -76,7 +87,13 @@ export const Navigation: React.FC = () => {
         )}
       </ul>
       <div className="rounded-full bg-gray-100 md:sticky md:bottom-4 dark:bg-black">
-        <ButtonOrLink variant="ghost" className="bg-black/5 dark:md:bg-white/5" onClick={() => { void handleSignOut(); }}>
+        <ButtonOrLink
+          variant="ghost"
+          className="bg-black/5 dark:md:bg-white/5"
+          onClick={() => {
+            void handleSignOut();
+          }}
+        >
           <IconLogout className="size-5 dark:text-white" />
         </ButtonOrLink>
       </div>

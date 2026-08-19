@@ -1,6 +1,8 @@
 'use client';
 
+import { cn } from '@/utils/cn';
 import { useEffect, useRef, useState } from 'react';
+import { BsThreeDotsVertical } from 'react-icons/bs';
 
 interface MessageMenuProps {
   content: string;
@@ -16,7 +18,19 @@ interface MessageMenuProps {
   onVoiceChange?: (uri: string) => void;
 }
 
-export function MessageMenu({ content, onDelete, side = 'right', role, ttsEnabled, onRepeat, ttsSpeed = 1, onSpeedChange = () => {}, voices = [], selectedVoiceURI = null, onVoiceChange = () => {} }: MessageMenuProps) {
+export function MessageMenu({
+  content,
+  onDelete,
+  side = 'right',
+  role,
+  ttsEnabled,
+  onRepeat,
+  ttsSpeed = 1,
+  onSpeedChange = () => {},
+  voices = [],
+  selectedVoiceURI = null,
+  onVoiceChange = () => {},
+}: MessageMenuProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
   const [isSpeedOpen, setIsSpeedOpen] = useState<boolean>(false);
@@ -78,41 +92,36 @@ export function MessageMenu({ content, onDelete, side = 'right', role, ttsEnable
   }
 
   return (
-    <div ref={menuRef} className={`absolute top-2 ${side === 'left' ? 'left-2' : 'right-2'}`}>
+    <div ref={menuRef} className={`relative`}>
       {/* Three-dot trigger */}
       <button
         type="button"
-        aria-label="Message options"
         aria-haspopup="true"
-        aria-expanded={isOpen}
+        aria-label="Message options"
+        aria-expanded={isOpen}  
         onClick={() => setIsOpen((prev) => !prev)}
-        className="flex items-center justify-center w-6 h-6 rounded text-[#8B949E] hover:text-white hover:bg-[#30363D] transition-colors duration-150 focus:outline-none focus-visible:ring-1 focus-visible:ring-[#2F81F7]"
+        className="flex h-6 w-6 items-center justify-center rounded text-white transition-colors duration-150 hover:bg-[#30363D] hover:text-white focus:outline-none focus-visible:ring-1 focus-visible:ring-[#2F81F7]"
       >
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 14 14"
-          fill="currentColor"
-          aria-hidden="true"
-        >
-          <circle cx="7" cy="2.5" r="1.25" />
-          <circle cx="7" cy="7" r="1.25" />
-          <circle cx="7" cy="11.5" r="1.25" />
-        </svg>
+        <BsThreeDotsVertical className="h-4 w-4" />
       </button>
 
       {/* Dropdown panel */}
       {isOpen && (
         <div
           role="menu"
-          className="absolute right-0 top-full mt-1 min-w-[110px] rounded-lg border border-[#30363D] bg-[#161B22] shadow-lg py-1 z-50"
+          className={cn(
+            'absolute top-full right-0 z-50 mt-1 min-w-[110px] rounded-lg border border-[#30363D] bg-[#161B22] py-1 shadow-lg',
+            {
+              'left-0': side !== 'left',
+            },
+          )}
         >
           {role === 'assistant' && ttsEnabled && (
             <button
               type="button"
               role="menuitem"
               onClick={handleRepeat}
-              className="w-full text-left px-3 py-1.5 text-sm text-white hover:bg-[#30363D] transition-colors duration-100 focus:outline-none focus-visible:bg-[#30363D]"
+              className="w-full px-3 py-1.5 text-left text-sm text-white transition-colors duration-100 hover:bg-[#30363D] focus:outline-none focus-visible:bg-[#30363D]"
             >
               Repeat
             </button>
@@ -124,7 +133,7 @@ export function MessageMenu({ content, onDelete, side = 'right', role, ttsEnable
                 type="button"
                 role="menuitem"
                 onClick={() => setIsSpeedOpen((prev) => !prev)}
-                className="w-full text-left px-3 py-1.5 text-sm text-white hover:bg-[#30363D] transition-colors duration-100 focus:outline-none focus-visible:bg-[#30363D]"
+                className="w-full px-3 py-1.5 text-left text-sm text-white transition-colors duration-100 hover:bg-[#30363D] focus:outline-none focus-visible:bg-[#30363D]"
               >
                 Speed {ttsSpeed.toFixed(1)}×
               </button>
@@ -147,14 +156,14 @@ export function MessageMenu({ content, onDelete, side = 'right', role, ttsEnable
                 type="button"
                 role="menuitem"
                 onClick={() => setIsVoiceOpen((prev) => !prev)}
-                className="w-full text-left px-3 py-1.5 text-sm text-white hover:bg-[#30363D] transition-colors duration-100 focus:outline-none focus-visible:bg-[#30363D]"
+                className="w-full px-3 py-1.5 text-left text-sm text-white transition-colors duration-100 hover:bg-[#30363D] focus:outline-none focus-visible:bg-[#30363D]"
               >
                 {voices.find((v) => v.voiceURI === selectedVoiceURI)?.name ?? 'Voice'}
               </button>
               {isVoiceOpen && (
                 <div className="max-h-40 overflow-y-auto">
                   {voices.length === 0 ? (
-                    <div className="px-3 py-1.5 text-sm text-[#8B949E] cursor-default select-none">
+                    <div className="cursor-default px-3 py-1.5 text-sm text-[#8B949E] select-none">
                       No voices available
                     </div>
                   ) : (
@@ -169,7 +178,7 @@ export function MessageMenu({ content, onDelete, side = 'right', role, ttsEnable
                             onVoiceChange(voice.voiceURI);
                             setIsVoiceOpen(false);
                           }}
-                          className={`w-full text-left px-3 py-1.5 text-sm hover:bg-[#30363D] transition-colors duration-100 focus:outline-none focus-visible:bg-[#30363D] ${isSelected ? 'text-[#2F81F7]' : 'text-white'}`}
+                          className={`w-full px-3 py-1.5 text-left text-sm transition-colors duration-100 hover:bg-[#30363D] focus:outline-none focus-visible:bg-[#30363D] ${isSelected ? 'text-[#2F81F7]' : 'text-white'}`}
                         >
                           {isSelected ? `✓ ${voice.name}` : voice.name}
                         </button>
@@ -185,7 +194,7 @@ export function MessageMenu({ content, onDelete, side = 'right', role, ttsEnable
             type="button"
             role="menuitem"
             onClick={handleCopy}
-            className="w-full text-left px-3 py-1.5 text-sm text-white hover:bg-[#30363D] transition-colors duration-100 focus:outline-none focus-visible:bg-[#30363D]"
+            className="w-full px-3 py-1.5 text-left text-sm text-white transition-colors duration-100 hover:bg-[#30363D] focus:outline-none focus-visible:bg-[#30363D]"
           >
             {copied ? 'Copied!' : 'Copy'}
           </button>
@@ -194,7 +203,7 @@ export function MessageMenu({ content, onDelete, side = 'right', role, ttsEnable
             type="button"
             role="menuitem"
             onClick={handleDelete}
-            className="w-full text-left px-3 py-1.5 text-sm text-[#F85149] hover:bg-[#30363D] transition-colors duration-100 focus:outline-none focus-visible:bg-[#30363D]"
+            className="w-full px-3 py-1.5 text-left text-sm text-[#F85149] transition-colors duration-100 hover:bg-[#30363D] focus:outline-none focus-visible:bg-[#30363D]"
           >
             Delete
           </button>

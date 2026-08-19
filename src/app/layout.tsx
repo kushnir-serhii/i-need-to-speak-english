@@ -18,10 +18,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`dark ${urbanist.variable} ${jetBrainsMono.variable}`}
-    >
+    <html lang="en" className={`dark ${urbanist.variable} ${jetBrainsMono.variable}`}>
       <body className="font-sans antialiased dark:bg-gray-900">
         <ThemeHydrator />
         {children}

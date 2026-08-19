@@ -120,7 +120,7 @@ export default function ChatPage() {
   const role = useUserStore((s) => s.role);
   const isLimitReached = role === 'user' && dailyRequests > 0 && dailyRequests >= dailyRequestLimit;
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full max-h-screen flex-col">
       <div className="flex flex-none items-center justify-end px-4 py-2">
         <button
           type="button"

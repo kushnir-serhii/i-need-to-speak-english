@@ -16,7 +16,7 @@ export const Header: React.FC = () => {
   const remainingMessages = Math.max(0, dailyRequestLimit - dailyRequests);
 
   return (
-    <header className="flex w-full">
+    <header className="sticky top-0 flex w-full">
       <div className="flex w-full flex-col items-start justify-between gap-3 py-3.5 pr-4 pl-4 sm:flex-row sm:items-center md:gap-0 md:pl-0 lg:flex-row">
         <div className="flex w-full justify-between">
           {/* <!-- Logo mobile --> */}
@@ -45,7 +45,7 @@ export const Header: React.FC = () => {
               {visitorCount} / {dailyCap} visitors today
             </span>
             {visitorName && (
-              <span className="text-sm text-muted-foreground">{visitorName}</span>
+              <span className="text-sm text-blue-500">{visitorName}</span>
             )}
             <button
               onClick={reset}
@@ -55,9 +55,7 @@ export const Header: React.FC = () => {
             </button>
           </div>
         </div>
-        <div className="sm:hidden">
-          <InputSearch />
-        </div>
+     
       </div>
     </header>
   );
