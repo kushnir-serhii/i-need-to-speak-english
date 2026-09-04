@@ -8,7 +8,7 @@ import NamePrompt from '@/components/ui/NamePrompt';
 // Internal component — not exported
 function DailyLimitScreen({ count, cap }: { count: number; cap: number }) {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-6 bg-[#0D1117] px-4">
+    <div className="flex min-h-screen flex-col items-center justify-center gap-6 bg-bg px-4">
       {/* INTSE text mark */}
       <div className="rounded-full bg-white p-[13px]">
         <span className="flex size-6 items-center justify-center text-xs font-bold text-black">
@@ -16,11 +16,11 @@ function DailyLimitScreen({ count, cap }: { count: number; cap: number }) {
         </span>
       </div>
 
-      <h1 className="max-w-md text-center font-[--font-inter] text-2xl font-bold text-[#F0F6FC]">
+      <h1 className="max-w-md text-center font-[--font-inter] text-2xl font-bold text-ink">
         We&apos;ve reached our daily visitor limit. Come back tomorrow!
       </h1>
 
-      <p className="font-mono text-sm text-[#8B949E]">
+      <p className="font-mono text-sm text-neutral-500">
         {count} / {cap} visitors today
       </p>
     </div>
@@ -108,8 +108,8 @@ export default function EnrollmentGate({ children }: { children: React.ReactNode
 
   if (status === 'loading') {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#0D1117]">
-        <div className="size-10 animate-spin rounded-full border-4 border-[#8B949E] border-t-[#2F81F7]" />
+      <div className="flex min-h-screen items-center justify-center bg-bg">
+        <div className="size-10 animate-spin rounded-full border-4 border-[#9397ab] border-t-[#9184d9]" />
       </div>
     );
   }

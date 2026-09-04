@@ -1,10 +1,11 @@
 import './styles/globals.css';
-import { Urbanist, JetBrains_Mono } from 'next/font/google';
+import { Inter, JetBrains_Mono } from 'next/font/google';
 import { ThemeHydrator } from '@/components/ui/ThemeHydrator';
 
-const urbanist = Urbanist({
+const inter = Inter({
   subsets: ['latin'],
-  variable: '--font-urbanist',
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-inter',
 });
 
 const jetBrainsMono = JetBrains_Mono({
@@ -18,8 +19,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`dark ${urbanist.variable} ${jetBrainsMono.variable}`}>
-      <body className="font-sans antialiased dark:bg-gray-900">
+    <html lang="en" className={`dark ${inter.variable} ${jetBrainsMono.variable}`}>
+      <body className="font-sans antialiased dark:bg-[#0f111c]">
         <ThemeHydrator />
         {children}
       </body>

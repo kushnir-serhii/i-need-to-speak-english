@@ -30,8 +30,8 @@ export function LimitReachedModal({ isOpen, onClose }: LimitReachedModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center">
-      <div className="bg-[#161B22] rounded-xl max-w-sm w-full mx-4 p-6 border border-[#30363D]">
-        <p className="text-[#8B949E] text-sm leading-relaxed mb-6">
+      <div className="bg-surface rounded-xl max-w-sm w-full mx-4 p-6 border border-neutral-800">
+        <p className="text-neutral-500 text-sm leading-relaxed mb-6">
           You&apos;ve reached today&apos;s limit. Come back tomorrow! You can also use your own key to continue.
         </p>
 
@@ -40,14 +40,14 @@ export function LimitReachedModal({ isOpen, onClose }: LimitReachedModalProps) {
             <button
               type="button"
               onClick={handleEnterKey}
-              className="px-4 py-2 rounded-lg text-sm text-[#F0F6FC] border border-[#30363D] hover:bg-[#21262D] transition-colors"
+              className="px-4 py-2 rounded-lg text-sm text-ink border border-neutral-800 hover:bg-neutral-900 transition-colors"
             >
               Enter your key
             </button>
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-lg text-sm text-white bg-[#2F81F7] hover:bg-blue-500 transition-colors"
+              className="px-4 py-2 rounded-lg text-sm text-white bg-accent hover:bg-accent-400 transition-colors"
             >
               OK
             </button>
@@ -61,20 +61,20 @@ export function LimitReachedModal({ isOpen, onClose }: LimitReachedModalProps) {
               value={keyValue}
               onChange={(e) => setKeyValue(e.target.value)}
               placeholder="sk-…"
-              className="w-full px-3 py-2 rounded-lg text-sm text-[#F0F6FC] bg-[#0D1117] border border-[#30363D] placeholder-[#8B949E] focus:outline-none focus:border-[#2F81F7] transition-colors"
+              className="w-full px-3 py-2 rounded-lg text-sm text-ink bg-bg border border-neutral-800 placeholder-neutral-500 focus:outline-none focus:border-accent transition-colors"
             />
             <div className="flex gap-3 justify-end">
               <button
                 type="button"
                 onClick={handleCancel}
-                className="px-4 py-2 rounded-lg text-sm text-[#F0F6FC] border border-[#30363D] hover:bg-[#21262D] transition-colors"
+                className="px-4 py-2 rounded-lg text-sm text-ink border border-neutral-800 hover:bg-neutral-900 transition-colors"
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={handleSaveKey}
-                className="px-4 py-2 rounded-lg text-sm text-white bg-[#2F81F7] hover:bg-blue-500 transition-colors"
+                className="px-4 py-2 rounded-lg text-sm text-white bg-accent hover:bg-accent-400 transition-colors"
               >
                 Save key
               </button>

@@ -41,7 +41,10 @@ export async function POST(request: NextRequest): Promise<Response> {
       return jsonError(400, 'invalid_request', 'messages array and visitorId are required')
     }
 
-    const { messages, visitorId, targetLanguage, customPrompt, useCustomPrompt } = body as Record<string, unknown>
+    const { messages, visitorId, targetLanguage, level, customPrompt, useCustomPrompt } = body as Record<string, unknown>
+
+    const CEFR = new Set(['A1', 'A2', 'B1', 'B2', 'C1', 'C2'])
+    const safeLevel = typeof level === 'string' && CEFR.has(level) ? level : undefined
 
     if (!Array.isArray(messages) || typeof visitorId !== 'string' || !visitorId.trim()) {
       return jsonError(400, 'invalid_request', 'messages array and visitorId are required')
@@ -137,7 +140,10 @@ export async function POST(request: NextRequest): Promise<Response> {
             content:
               useCustomPrompt === true && trimmedCustomPrompt.length > 0
                 ? trimmedCustomPrompt
-                : buildSystemPrompt(typeof targetLanguage === 'string' && targetLanguage.trim() ? targetLanguage : 'English'),
+                : buildSystemPrompt(
+                    typeof targetLanguage === 'string' && targetLanguage.trim() ? targetLanguage : 'English',
+                    safeLevel,
+                  ),
           },
           ...typedMessages,
         ],

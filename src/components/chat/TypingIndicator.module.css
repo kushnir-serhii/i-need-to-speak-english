@@ -3,23 +3,23 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background-color: #8B949E;
-  animation: bounce 1.2s infinite;
+  background-color: var(--color-accent-400);
+  animation: blink 1.3s infinite;
 }
 
 .dot2 {
-  animation-delay: 0.2s;
+  animation-delay: 0.18s;
 }
 
 .dot3 {
-  animation-delay: 0.4s;
+  animation-delay: 0.36s;
 }
 
-@keyframes bounce {
+@keyframes blink {
   0%, 60%, 100% {
-    transform: translateY(0);
+    opacity: 0.25;
   }
   30% {
-    transform: translateY(-6px);
+    opacity: 1;
   }
 }

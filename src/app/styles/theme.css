@@ -4,11 +4,25 @@
     --index: calc(1vw + 1vh);
     --index-ratio: 25;
     /*16:9*/
+
+    /* ── Nocturne design-system tokens ──────────────────────────────
+       Source of truth: _ds/nocturne styles.css. The accent is the
+       product blurple (OKLCH hue 289.2). Ramps share one lightness
+       scale so the same step of any role matches in visual value. */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 14px;
+
+    --shadow-sm: 0 0 0 1px #3f424d;
+    --shadow-md: 0 0 0 1px #595d6c, 0 6px 18px rgba(0, 0, 0, 0.55);
+    --shadow-lg: 0 0 0 1px #9397ab, 0 16px 40px rgba(0, 0, 0, 0.65);
 }
 
 @theme {
     --font-*: initial;
-    --font-family: var(--font-urbanist), sans-serif;
+    --font-family: var(--font-inter), sans-serif;
+    --font-sans: var(--font-inter), system-ui, sans-serif;
+    --font-heading: var(--font-inter), system-ui, sans-serif;
     --font-secondary: var(--font-mono), monospace;
 
     --breakpoint-*: initial;
@@ -23,12 +37,42 @@
 
     --color-white: #ffffff;
     --color-black: #071429;
+
+    /* Nocturne grounds */
+    --color-bg: #161826;
     --color-bg-main: #e7edf8;
+    --color-surface: #232532;
+    --color-ink: #e9e9ed;
     --color-blue: #0e64ee;
     --color-ice-blue: #e8ecf4;
     --color-gray: #cdd0d4;
     --color-card-bg: oklch(1 0 0 / 80%);
     --color-card-bg-dark: oklch(1 0 0 / 2%);
+
+    /* Accent ramp (product blurple) */
+    --color-accent: #9184d9;
+    --color-accent-100: #f5f4ff;
+    --color-accent-200: #e7e5fe;
+    --color-accent-300: #d2cefd;
+    --color-accent-400: #b5abfc;
+    --color-accent-500: #968ae0;
+    --color-accent-600: #796cbf;
+    --color-accent-700: #5d5294;
+    --color-accent-800: #423a6a;
+    --color-accent-900: #2b2741;
+
+    /* Neutral ramp (shared lightness scale) — overrides Tailwind's */
+    --color-neutral-100: #f3f5fe;
+    --color-neutral-200: #e4e7f5;
+    --color-neutral-300: #cfd3e5;
+    --color-neutral-400: #b2b6ca;
+    --color-neutral-500: #9397ab;
+    --color-neutral-600: #75798c;
+    --color-neutral-700: #595d6c;
+    --color-neutral-800: #3f424d;
+    --color-neutral-900: #292b31;
+
+    /* Status (kept from the app's own scale) */
+    --color-warning: #d29922;
+    --color-danger: #da3633;
 }
-
-

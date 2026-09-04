@@ -33,7 +33,9 @@ export const ButtonOrLink = ({
     secondary: 'bg-blue hover:bg-blue/10',
     ghost: 'bg-transparent hover:bg-black/15 dark:hover:bg-white/15 dark:bg-white/5',
   };
-  const activeStyles = isActive ? 'bg-white text-black dark:text-black dark:bg-blue/15' : '';
+  const activeStyles = isActive
+    ? 'bg-accent/15 text-accent-200 dark:bg-accent/15 dark:text-accent-200 ring-1 ring-accent-800'
+    : '';
   const classes = cn(baseStyles, variantStyles[props.variant || 'primary'], className);
 
   // 👉 Render Link if href exists

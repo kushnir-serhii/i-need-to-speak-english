@@ -10,7 +10,7 @@ interface ToastProps {
 }
 
 const borderColor: Record<ToastType['type'], string> = {
-  info: '#2F81F7',
+  info: '#9184d9',
   warning: '#D29922',
   error: '#DA3633',
 };
@@ -22,7 +22,7 @@ const icons: Record<ToastType['type'], string> = {
 };
 
 const iconColor: Record<ToastType['type'], string> = {
-  info: '#2F81F7',
+  info: '#9184d9',
   warning: '#D29922',
   error: '#DA3633',
 };
@@ -33,7 +33,7 @@ export function Toast({ id, type, message, onDismiss }: ToastProps) {
       role="alert"
       aria-live="polite"
       style={{ borderLeftColor: borderColor[type] }}
-      className="flex min-w-[280px] max-w-[480px] items-center gap-3 rounded-md border-l-4 bg-[#161B22] px-4 py-3 shadow-lg"
+      className="flex min-w-[280px] max-w-[480px] items-center gap-3 rounded-md border-l-4 bg-surface px-4 py-3 shadow-lg"
     >
       {/* Type icon */}
       <span

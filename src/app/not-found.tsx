@@ -1,53 +1,25 @@
-import Image from 'next/image';
 import Link from 'next/link';
-import React from 'react';
+import { IntseMark } from '@/components/ui';
 
 export default function NotFound() {
   return (
-    <div className="relative z-1 flex min-h-screen flex-col items-center justify-center overflow-hidden p-6">
-      <>
-        <div className="absolute top-0 right-0 -z-1 w-full max-w-[250px] xl:max-w-[450px]">
-          <Image width={540} height={254} src="/images/shape/grid-01.svg" alt="grid" />
-        </div>
-        <div className="absolute bottom-0 left-0 -z-1 w-full max-w-[250px] rotate-180 xl:max-w-[450px]">
-          <Image width={540} height={254} src="/images/shape/grid-01.svg" alt="grid" />
-        </div>
-      </>
-      <div className="mx-auto w-full max-w-[242px] text-center sm:max-w-[472px]">
-        <h1 className="text-title-md xl:text-title-2xl mb-8 font-bold text-gray-800 dark:text-white/90">
-          ERROR
-        </h1>
-
-        <Image
-          src="/images/error/404.svg"
-          alt="404"
-          className="dark:hidden"
-          width={472}
-          height={152}
-        />
-        <Image
-          src="/images/error/404-dark.svg"
-          alt="404"
-          className="hidden dark:block"
-          width={472}
-          height={152}
-        />
-
-        <p className="mt-10 mb-6 text-base text-gray-700 sm:text-lg dark:text-gray-400">
-          We can’t seem to find the page you are looking for!
+    <div className="flex min-h-screen flex-col items-center justify-center gap-6 bg-bg px-6 text-center">
+      <span className="text-accent-400">
+        <IntseMark size={52} state="thinking" />
+      </span>
+      <div className="flex flex-col gap-2">
+        <h1 className="font-heading text-3xl font-medium text-ink">Page not found</h1>
+        <p className="max-w-[320px] text-sm leading-relaxed text-neutral-400">
+          We can&rsquo;t find the page you&rsquo;re looking for. It may have moved, or never
+          existed.
         </p>
-
-        <Link
-          href="/"
-          className="shadow-theme-xs inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-5 py-3.5 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/3 dark:hover:text-gray-200"
-        >
-          Back to Home Page
-        </Link>
       </div>
-      {/* <!-- Footer --> */}
-      <p className="absolute bottom-6 left-1/2 -translate-x-1/2 text-center text-sm text-gray-500 dark:text-gray-400">
-        &copy; {new Date().getFullYear()} - TailAdmin
-      </p>
+      <Link
+        href="/"
+        className="grid h-10 place-items-center rounded-[10px] border border-accent px-5 text-sm text-accent-200 transition-colors hover:bg-accent/[0.14]"
+      >
+        Back to chat
+      </Link>
     </div>
   );
 }

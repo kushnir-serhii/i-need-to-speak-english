@@ -1,9 +1,14 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
+import { PiXBold } from 'react-icons/pi';
 import { ChatThread } from '@/components/chat/ChatThread';
 import { ChatStatusBar } from '@/components/chat/ChatStatusBar';
 import { ChatInput } from '@/components/chat/ChatInput';
+import { SessionPanel } from '@/components/chat/SessionPanel';
+import { SessionHeader, type SessionView } from '@/components/chat/SessionHeader';
+import { TalkPanel } from '@/components/chat/TalkPanel';
+import { PromptView } from '@/components/chat/PromptView';
 import { LimitReachedModal } from '@/components/ui';
 import { useUserStore } from '@/store/useUserStore';
 import { useSettingsStore } from '@/store/useSettingsStore';
@@ -14,12 +19,15 @@ import { useNotificationStore } from '@/store/useNotificationStore';
 export default function ChatPage() {
   const [showLimitModal, setShowLimitModal] = useState(false);
   const [showNewConvDialog, setShowNewConvDialog] = useState(false);
+  const [showSessionSheet, setShowSessionSheet] = useState(false);
+  const [seedText, setSeedText] = useState<{ value: string } | null>(null);
+  const [view, setView] = useState<SessionView>('chat');
 
   const dailyRequests = useUserStore((s) => s.dailyRequests);
   const dailyRequestLimit = useUserStore((s) => s.dailyRequestLimit);
   const visitorId = useUserStore((s) => s.visitorId);
-  const apiKey = useSettingsStore((s) => s.apiKey);
   const targetLanguage = useSettingsStore((s) => s.targetLanguage);
+  const selectedVoiceURI = useSettingsStore((s) => s.selectedVoiceURI);
   const ttsEnabled = useSettingsStore((s) => s.ttsEnabled);
   const setTtsEnabled = useSettingsStore((s) => s.setTtsEnabled);
   const ttsSpeed = useSettingsStore((s) => s.ttsSpeed);
@@ -64,20 +72,11 @@ export default function ChatPage() {
     setShowNewConvDialog(false);
   }, [clearMessages]);
 
-  const handleCancelNewConv = useCallback(() => {
-    setShowNewConvDialog(false);
-  }, []);
-
-  const handleSpeedChange = useCallback(
-    (speed: number) => {
-      setTtsSpeed(speed);
-    },
-    [setTtsSpeed],
+  const handleSpeedChange = useCallback((speed: number) => setTtsSpeed(speed), [setTtsSpeed]);
+  const handleVoiceChange = useCallback(
+    (uri: string) => setSelectedVoiceURI(uri),
+    [setSelectedVoiceURI],
   );
-
-  const handleVoiceChange = useCallback((uri: string) => {
-    setSelectedVoiceURI(uri);
-  }, []);
 
   const { isSupported, voices, speak, stop, repeat } = useTTS({ targetLanguage });
 
@@ -89,9 +88,9 @@ export default function ChatPage() {
     const msUntilMidnight = tomorrow.getTime() - Date.now();
 
     const timerId = setTimeout(() => {
-      const visitorId = useUserStore.getState().visitorId;
-      if (visitorId === null) return;
-      fetch(`/api/stats?visitorId=${visitorId}`)
+      const id = useUserStore.getState().visitorId;
+      if (id === null) return;
+      fetch(`/api/stats?visitorId=${id}`)
         .then((res) => res.json())
         .then(
           (data: {
@@ -117,75 +116,137 @@ export default function ChatPage() {
     useChatStore.getState().initSessionId();
   }, []);
 
+  // Esc closes any open overlay.
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (e.key !== 'Escape') return;
+      setShowSessionSheet(false);
+      setShowNewConvDialog(false);
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
   const role = useUserStore((s) => s.role);
-  const isLimitReached = role === 'user' && dailyRequests > 0 && dailyRequests >= dailyRequestLimit;
+  const isLimitReached =
+    role === 'user' && dailyRequests > 0 && dailyRequests >= dailyRequestLimit;
+
+  const voiceName =
+    voices.find((v) => v.voiceURI === selectedVoiceURI)?.name ?? 'System default';
+
   return (
-    <div className="flex h-full max-h-screen flex-col">
-      <div className="flex flex-none items-center justify-end px-4 py-2">
-        <button
-          type="button"
-          disabled={messages.length === 0}
-          onClick={handleNewConversation}
-          className="rounded-lg border border-[#30363D] px-3 py-1.5 text-sm font-medium text-[#F0F6FC] transition-colors hover:bg-[#21262D] disabled:cursor-not-allowed disabled:opacity-40"
-        >
-          New conversation
-        </button>
-      </div>
-      <ChatThread
-        repeat={repeat}
-        ttsSpeed={ttsSpeed}
-        onSpeedChange={handleSpeedChange}
-        voices={voices}
-        onVoiceChange={handleVoiceChange}
-      />
-      <div className="flex-none">
+    <div className="flex h-full max-h-screen">
+      {/* Centre column — the mobile screen, at any width */}
+      <div className="flex min-w-0 flex-1 flex-col">
+        <SessionHeader
+          view={view}
+          onViewChange={setView}
+          onEnd={handleNewConversation}
+          ttsEnabled={ttsEnabled}
+          onToggleTts={() => {
+            const next = !ttsEnabled;
+            setTtsEnabled(next);
+            if (!next) stop();
+          }}
+        />
+
         <ChatStatusBar />
+
+        {view === 'prompt' ? (
+          <PromptView />
+        ) : view === 'talk' ? (
+          <TalkPanel onOpenThread={() => setView('chat')} />
+        ) : (
+          <ChatThread
+            repeat={repeat}
+            ttsSpeed={ttsSpeed}
+            onSpeedChange={handleSpeedChange}
+            voices={voices}
+            onVoiceChange={handleVoiceChange}
+            onPrompt={(t) => setSeedText({ value: t })}
+            onSayItBack={(t) => setSeedText({ value: t })}
+          />
+        )}
+
+        {view !== 'prompt' && (
+          <ChatInput
+            disabled={isLimitReached}
+            onLimitReached={() => setShowLimitModal(true)}
+            speak={speak}
+            stop={stop}
+            isSupported={isSupported}
+            ttsEnabled={ttsEnabled}
+            seedText={seedText}
+            onOpenSettings={() => setShowSessionSheet(true)}
+          />
+        )}
       </div>
-      <ChatInput
-        disabled={isLimitReached}
-        onLimitReached={() => setShowLimitModal(true)}
-        speak={speak}
-        stop={stop}
-        isSupported={isSupported}
-        ttsEnabled={ttsEnabled}
-        onTTSToggle={() => {
-          const next = !ttsEnabled;
-          setTtsEnabled(next);
-          if (!next) stop();
-        }}
-      />
+
+      {/* Right rail on desktop (design doc 1d) */}
+      <aside className="hidden w-[300px] flex-none border-l border-neutral-900 p-5 lg:block">
+        <SessionPanel voiceName={voiceName} ttsSpeed={ttsSpeed} className="h-full" />
+      </aside>
+
+      {/* Session sheet on mobile / tablet */}
+      {showSessionSheet && (
+        <div
+          className="animate-fade-in fixed inset-0 z-50 flex justify-end bg-neutral-900/50 lg:hidden"
+          onClick={() => setShowSessionSheet(false)}
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Session settings"
+            className="animate-slide-in-right flex h-full w-[86%] max-w-[340px] flex-col overflow-y-auto border-l border-neutral-800 bg-bg p-5"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mb-3 flex justify-end">
+              <button
+                type="button"
+                aria-label="Close"
+                onClick={() => setShowSessionSheet(false)}
+                className="grid h-9 w-9 place-items-center rounded-lg text-neutral-400 hover:bg-neutral-900 hover:text-ink"
+              >
+                <PiXBold className="text-lg" />
+              </button>
+            </div>
+            <SessionPanel voiceName={voiceName} ttsSpeed={ttsSpeed} className="flex-1" />
+          </div>
+        </div>
+      )}
+
       <LimitReachedModal isOpen={showLimitModal} onClose={() => setShowLimitModal(false)} />
       {showNewConvDialog && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60"
-          onClick={handleCancelNewConv}
+          className="animate-fade-in fixed inset-0 z-50 flex items-center justify-center bg-neutral-900/50"
+          onClick={() => setShowNewConvDialog(false)}
         >
           <div
-            className="mx-4 w-full max-w-sm rounded-xl border border-[#30363D] bg-[#161B22] p-6"
+            className="mx-4 w-full max-w-sm rounded-[14px] border border-neutral-700 bg-surface p-6 shadow-[0_16px_40px_rgba(0,0,0,0.65)]"
             onClick={(e) => e.stopPropagation()}
           >
-            <p className="mb-6 text-sm leading-relaxed text-[#8B949E]">
+            <p className="mb-6 text-sm leading-relaxed text-neutral-400">
               Save this conversation before starting a new one?
             </p>
-            <div className="flex justify-end gap-3">
+            <div className="flex justify-end gap-2">
               <button
                 type="button"
-                onClick={handleCancelNewConv}
-                className="rounded-lg border border-[#30363D] px-4 py-2 text-sm font-medium text-[#F0F6FC] transition-colors hover:bg-[#21262D]"
+                onClick={() => setShowNewConvDialog(false)}
+                className="rounded-lg border border-neutral-800 px-4 py-2 text-sm font-medium text-ink transition-colors hover:bg-neutral-900"
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={handleDiscard}
-                className="rounded-lg border border-[#30363D] px-4 py-2 text-sm font-medium text-[#F0F6FC] transition-colors hover:bg-[#21262D]"
+                className="rounded-lg border border-neutral-800 px-4 py-2 text-sm font-medium text-ink transition-colors hover:bg-neutral-900"
               >
                 Discard
               </button>
               <button
                 type="button"
                 onClick={handleSave}
-                className="rounded-lg bg-[#2F81F7] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-500"
+                className="rounded-lg border border-accent bg-accent/10 px-4 py-2 text-sm font-medium text-accent-200 transition-colors hover:bg-accent/18"
               >
                 Save
               </button>

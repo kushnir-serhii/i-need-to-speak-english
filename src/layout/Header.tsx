@@ -1,6 +1,6 @@
 'use client';
 
-import { Logo, InputSearch } from '@/components/ui';
+import { Logo } from '@/components/ui';
 import { useUserStore } from '@/store/useUserStore';
 import { useSettingsStore } from '@/store/useSettingsStore';
 
@@ -16,46 +16,30 @@ export const Header: React.FC = () => {
   const remainingMessages = Math.max(0, dailyRequestLimit - dailyRequests);
 
   return (
-    <header className="sticky top-0 flex w-full">
-      <div className="flex w-full flex-col items-start justify-between gap-3 py-3.5 pr-4 pl-4 sm:flex-row sm:items-center md:gap-0 md:pl-0 lg:flex-row">
-        <div className="flex w-full justify-between">
-          {/* <!-- Logo mobile --> */}
-          <div className="md:hidden">
-            <Logo />
-          </div>
-          {/* <!-- Search --> */}
-          <div className="mr-auto ml-2 hidden sm:block">
-            <InputSearch />
-          </div>
+    <header className="sticky top-0 z-30 flex w-full items-center gap-3 px-4 py-3 md:pl-0">
+      {/* Mark — mobile only; the sidebar carries it on desktop */}
+      <div className="md:hidden">
+        <Logo />
+      </div>
 
-          {/* <!-- User Area --> */}
-          <div className="flex items-center gap-3">
-            {apiKey === '' && (
-              <span
-                style={{ fontFamily: 'var(--font-mono)' }}
-                className="text-sm text-[#8B949E]"
-              >
-                {remainingMessages} messages left today
-              </span>
-            )}
-            <span
-              style={{ fontFamily: 'var(--font-mono)' }}
-              className="text-sm text-[#8B949E]"
-            >
-              {visitorCount} / {dailyCap} visitors today
-            </span>
-            {visitorName && (
-              <span className="text-sm text-blue-500">{visitorName}</span>
-            )}
-            <button
-              onClick={reset}
-              className="text-sm text-foreground hover:text-primary transition-colors"
-            >
-              Log out
-            </button>
-          </div>
-        </div>
-     
+      <div className="ml-auto flex min-w-0 items-center gap-3 font-mono text-xs text-neutral-500 sm:text-sm">
+        {apiKey === '' && (
+          <span className="hidden whitespace-nowrap sm:inline">
+            {remainingMessages} left today
+          </span>
+        )}
+        <span className="hidden whitespace-nowrap md:inline">
+          {visitorCount} / {dailyCap} visitors
+        </span>
+        {visitorName && (
+          <span className="max-w-32 truncate font-sans text-accent-400">{visitorName}</span>
+        )}
+        <button
+          onClick={reset}
+          className="whitespace-nowrap font-sans text-neutral-400 transition-colors hover:text-accent-200"
+        >
+          Log out
+        </button>
       </div>
     </header>
   );

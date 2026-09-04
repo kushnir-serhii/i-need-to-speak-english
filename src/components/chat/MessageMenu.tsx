@@ -100,7 +100,7 @@ export function MessageMenu({
         aria-label="Message options"
         aria-expanded={isOpen}  
         onClick={() => setIsOpen((prev) => !prev)}
-        className="flex h-6 w-6 items-center justify-center rounded text-white transition-colors duration-150 hover:bg-[#30363D] hover:text-white focus:outline-none focus-visible:ring-1 focus-visible:ring-[#2F81F7]"
+        className="grid h-8 w-8 place-items-center rounded-lg text-neutral-500 transition-colors duration-150 hover:bg-neutral-900 hover:text-accent-300 focus:outline-none focus-visible:ring-1 focus-visible:ring-accent"
       >
         <BsThreeDotsVertical className="h-4 w-4" />
       </button>
@@ -110,10 +110,8 @@ export function MessageMenu({
         <div
           role="menu"
           className={cn(
-            'absolute top-full right-0 z-50 mt-1 min-w-[110px] rounded-lg border border-[#30363D] bg-[#161B22] py-1 shadow-lg',
-            {
-              'left-0': side !== 'left',
-            },
+            'absolute top-full z-50 mt-1 min-w-[130px] rounded-lg border border-neutral-800 bg-surface py-1 shadow-lg',
+            side === 'left' ? 'right-0' : 'left-0',
           )}
         >
           {role === 'assistant' && ttsEnabled && (
@@ -121,7 +119,7 @@ export function MessageMenu({
               type="button"
               role="menuitem"
               onClick={handleRepeat}
-              className="w-full px-3 py-1.5 text-left text-sm text-white transition-colors duration-100 hover:bg-[#30363D] focus:outline-none focus-visible:bg-[#30363D]"
+              className="w-full px-3 py-1.5 text-left text-sm text-ink transition-colors duration-100 hover:bg-neutral-800 focus:outline-none focus-visible:bg-neutral-800"
             >
               Repeat
             </button>
@@ -133,7 +131,7 @@ export function MessageMenu({
                 type="button"
                 role="menuitem"
                 onClick={() => setIsSpeedOpen((prev) => !prev)}
-                className="w-full px-3 py-1.5 text-left text-sm text-white transition-colors duration-100 hover:bg-[#30363D] focus:outline-none focus-visible:bg-[#30363D]"
+                className="w-full px-3 py-1.5 text-left text-sm text-ink transition-colors duration-100 hover:bg-neutral-800 focus:outline-none focus-visible:bg-neutral-800"
               >
                 Speed {ttsSpeed.toFixed(1)}×
               </button>
@@ -156,14 +154,14 @@ export function MessageMenu({
                 type="button"
                 role="menuitem"
                 onClick={() => setIsVoiceOpen((prev) => !prev)}
-                className="w-full px-3 py-1.5 text-left text-sm text-white transition-colors duration-100 hover:bg-[#30363D] focus:outline-none focus-visible:bg-[#30363D]"
+                className="w-full px-3 py-1.5 text-left text-sm text-ink transition-colors duration-100 hover:bg-neutral-800 focus:outline-none focus-visible:bg-neutral-800"
               >
                 {voices.find((v) => v.voiceURI === selectedVoiceURI)?.name ?? 'Voice'}
               </button>
               {isVoiceOpen && (
                 <div className="max-h-40 overflow-y-auto">
                   {voices.length === 0 ? (
-                    <div className="cursor-default px-3 py-1.5 text-sm text-[#8B949E] select-none">
+                    <div className="cursor-default px-3 py-1.5 text-sm text-neutral-500 select-none">
                       No voices available
                     </div>
                   ) : (
@@ -178,7 +176,7 @@ export function MessageMenu({
                             onVoiceChange(voice.voiceURI);
                             setIsVoiceOpen(false);
                           }}
-                          className={`w-full px-3 py-1.5 text-left text-sm transition-colors duration-100 hover:bg-[#30363D] focus:outline-none focus-visible:bg-[#30363D] ${isSelected ? 'text-[#2F81F7]' : 'text-white'}`}
+                          className={`w-full px-3 py-1.5 text-left text-sm transition-colors duration-100 hover:bg-neutral-800 focus:outline-none focus-visible:bg-neutral-800 ${isSelected ? "text-accent" : "text-ink"}`}
                         >
                           {isSelected ? `✓ ${voice.name}` : voice.name}
                         </button>
@@ -194,7 +192,7 @@ export function MessageMenu({
             type="button"
             role="menuitem"
             onClick={handleCopy}
-            className="w-full px-3 py-1.5 text-left text-sm text-white transition-colors duration-100 hover:bg-[#30363D] focus:outline-none focus-visible:bg-[#30363D]"
+            className="w-full px-3 py-1.5 text-left text-sm text-ink transition-colors duration-100 hover:bg-neutral-800 focus:outline-none focus-visible:bg-neutral-800"
           >
             {copied ? 'Copied!' : 'Copy'}
           </button>
@@ -203,7 +201,7 @@ export function MessageMenu({
             type="button"
             role="menuitem"
             onClick={handleDelete}
-            className="w-full px-3 py-1.5 text-left text-sm text-[#F85149] transition-colors duration-100 hover:bg-[#30363D] focus:outline-none focus-visible:bg-[#30363D]"
+            className="w-full px-3 py-1.5 text-left text-sm text-red-400 transition-colors duration-100 hover:bg-neutral-800 focus:outline-none focus-visible:bg-neutral-800"
           >
             Delete
           </button>

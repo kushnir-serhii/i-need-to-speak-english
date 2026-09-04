@@ -1,16 +1,22 @@
 'use client';
 
 import type { Message } from '@/store/useChatStore';
-import { MessageMenu } from './MessageMenu';
-import { PiSpeakerHighBold } from 'react-icons/pi';
+import { IntseMark } from '@/components/ui';
+import { MessageActions } from './MessageActions';
+import { CorrectionCard } from './CorrectionCard';
 
 interface MessageBubbleProps {
   message: Message;
   role: Message['role'];
   isSpeaking?: boolean;
+  /** Latest assistant turn while the user is on a clean streak (design 1e). */
+  pleased?: boolean;
   onDelete: () => void;
   ttsEnabled?: boolean;
   onRepeat?: () => void;
+  onSpeak?: (text: string) => void;
+  /** Seed the composer with a phrase (correction card "Say it back"). */
+  onSayItBack?: (text: string) => void;
   ttsSpeed?: number;
   onSpeedChange?: (speed: number) => void;
   voices?: SpeechSynthesisVoice[];
@@ -20,11 +26,13 @@ interface MessageBubbleProps {
 
 export function MessageBubble({
   message,
-  role,
   isSpeaking = false,
+  pleased = false,
   onDelete,
   ttsEnabled = false,
-  onRepeat,
+  onRepeat = () => {},
+  onSpeak = () => {},
+  onSayItBack = () => {},
   ttsSpeed = 1,
   onSpeedChange = () => {},
   voices = [],
@@ -35,52 +43,68 @@ export function MessageBubble({
 
   if (isUser) {
     return (
-      <div className="relative ml-auto flex max-w-[75%] flex-row items-center gap-3 rounded-2xl rounded-br-sm bg-[#2F81F7] px-4 py-2.5 text-sm wrap-break-word whitespace-pre-wrap text-white">
-        <MessageMenu
+      <div className="flex flex-col items-end gap-2">
+        <div className="animate-message-in border-accent-700 bg-accent-900 text-accent-100 max-w-[78%] rounded-[14px_14px_4px_14px] border px-3.5 py-2.5 text-[15px] leading-relaxed wrap-break-word whitespace-pre-wrap">
+          {message.content}
+        </div>
+        {message.correction ? (
+          <CorrectionCard
+            original={message.content}
+            suggestion={message.correction}
+            note={message.correctionNote}
+            onHear={() => onSpeak(message.correction!)}
+            onSayItBack={onSayItBack}
+          />
+        ) : null}
+        <MessageActions
           content={message.content}
-          onDelete={onDelete}
-          side="left"
           role="user"
+          align="end"
+          onDelete={onDelete}
           ttsEnabled={ttsEnabled}
-          onRepeat={onRepeat ?? (() => {})}
+          onRepeat={onRepeat}
           ttsSpeed={ttsSpeed}
           onSpeedChange={onSpeedChange}
           voices={voices}
           selectedVoiceURI={selectedVoiceURI}
           onVoiceChange={onVoiceChange}
         />
-        <p>{message.content}</p>
       </div>
     );
   }
 
-  const borderClass = isSpeaking ? 'border-[#2F81F7]' : 'border-[#30363D]';
-
   return (
-    <div
-      className={`relative mr-auto flex max-w-[75%] flex-row items-start gap-3 rounded-2xl rounded-bl-sm border bg-[#161B22] px-4 py-2.5 text-sm text-white ${borderClass} wrap-break-word whitespace-pre-wrap`}
-    >
-      <p>{message.content}</p>
-      {isSpeaking ? (
-        <PiSpeakerHighBold
-        className="w-6 h-6 animate-pulse text-[#2F81F7]"
-        aria-hidden="true"
-        />
-      ) : (
-        <MessageMenu
-          content={message.content}
-          onDelete={onDelete}
-          role="assistant"
-          side="right"
-          ttsEnabled={ttsEnabled}
-          onRepeat={onRepeat ?? (() => {})}
-          ttsSpeed={ttsSpeed}
-          onSpeedChange={onSpeedChange}
-          voices={voices}
-          selectedVoiceURI={selectedVoiceURI}
-          onVoiceChange={onVoiceChange}
-        />
-      )}
+    <div className="animate-message-in mr-auto flex items-start gap-2.5">
+      <span
+        className={`mt-0.5 shrink-0 ${
+          isSpeaking || pleased ? 'text-accent-200' : 'text-accent-400'
+        }`}
+      >
+        <IntseMark size={26} state={isSpeaking ? 'listening' : pleased ? 'pleased' : 'idle'} />
+      </span>
+      <div className="flex max-w-[300px] flex-col gap-2">
+        <div
+          className={`bg-surface text-ink rounded-[14px_14px_14px_4px] border px-3.5 py-2.5 text-[15px] leading-relaxed wrap-break-word whitespace-pre-wrap transition-colors ${
+            isSpeaking ? 'border-accent' : 'border-neutral-800'
+          }`}
+        >
+          {message.content}
+        </div>
+        {!message.isStreaming && message.content ? (
+          <MessageActions
+            content={message.content}
+            role="assistant"
+            onDelete={onDelete}
+            ttsEnabled={ttsEnabled}
+            onRepeat={onRepeat}
+            ttsSpeed={ttsSpeed}
+            onSpeedChange={onSpeedChange}
+            voices={voices}
+            selectedVoiceURI={selectedVoiceURI}
+            onVoiceChange={onVoiceChange}
+          />
+        ) : null}
+      </div>
     </div>
   );
 }

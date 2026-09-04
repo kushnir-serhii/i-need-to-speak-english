@@ -12,7 +12,7 @@ export function CharCounter({ count }: CharCounterProps) {
   return (
     <span
       className="text-xs"
-      style={{ color: isWarning ? '#D29922' : '#8B949E' }}
+      style={{ color: isWarning ? '#D29922' : '#9397ab' }}
     >
       {count} / 1000
     </span>

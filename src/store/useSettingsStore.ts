@@ -3,9 +3,13 @@ import { persist } from 'zustand/middleware';
 
 type Theme = 'dark' | 'light';
 
+export const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'] as const;
+export type CefrLevel = (typeof CEFR_LEVELS)[number];
+
 interface SettingsState {
   theme: Theme;
   targetLanguage: string;
+  level: CefrLevel;
   visitorName: string | null;
   hasSeenNamePrompt: boolean;
   apiKey: string;
@@ -19,6 +23,7 @@ interface SettingsState {
   setTtsEnabled: (v: boolean) => void;
   setSelectedVoiceURI: (uri: string | null) => void;
   setTargetLanguage: (lang: string) => void;
+  setLevel: (level: CefrLevel) => void;
   ttsSpeed: number;
   setTtsSpeed: (speed: number) => void;
   customPrompt: string;
@@ -32,6 +37,7 @@ export const useSettingsStore = create<SettingsState>()(
     (set, get) => ({
       theme: 'dark',
       targetLanguage: 'English',
+      level: 'B1',
       visitorName: null,
       hasSeenNamePrompt: false,
       apiKey: '',
@@ -69,6 +75,9 @@ export const useSettingsStore = create<SettingsState>()(
       },
       setTargetLanguage: (lang: string) => {
         set({ targetLanguage: lang, selectedVoiceURI: null });
+      },
+      setLevel: (level: CefrLevel) => {
+        set({ level });
       },
       setTtsSpeed: (speed: number) => set({ ttsSpeed: Math.min(2.0, Math.max(0.5, speed)) }),
       customPrompt: '',

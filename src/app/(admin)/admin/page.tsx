@@ -47,9 +47,9 @@ interface ResetResponse {
 
 function KpiCard({ label, value }: { label: string; value: number }) {
   return (
-    <div className="rounded-lg border border-[#30363D] bg-[#161B22] p-5">
-      <p className="mb-1 text-xs font-medium uppercase tracking-wide text-[#8B949E]">{label}</p>
-      <p className="text-3xl font-bold text-[#F0F6FC]">{value.toLocaleString()}</p>
+    <div className="rounded-lg border border-neutral-800 bg-surface p-5">
+      <p className="mb-1 text-xs font-medium uppercase tracking-wide text-neutral-500">{label}</p>
+      <p className="text-3xl font-bold text-ink">{value.toLocaleString()}</p>
     </div>
   );
 }
@@ -130,12 +130,12 @@ export default function AdminPanelPage() {
   }, [toast]);
 
   return (
-    <div className="flex flex-1 flex-col overflow-y-auto bg-[#0D1117] px-4 py-8 sm:px-8">
+    <div className="flex flex-1 flex-col overflow-y-auto bg-bg px-4 py-8 sm:px-8">
       <div className="mb-8 flex items-center justify-between">
-        <h1 className="font-[--font-inter] text-2xl font-bold text-[#F0F6FC]">Admin Panel</h1>
+        <h1 className="font-[--font-inter] text-2xl font-bold text-ink">Admin Panel</h1>
       </div>
 
-      {loading && <p className="text-sm text-[#8B949E]">Loading stats…</p>}
+      {loading && <p className="text-sm text-neutral-500">Loading stats…</p>}
 
       {!loading && stats && (
         <>
@@ -147,73 +147,73 @@ export default function AdminPanelPage() {
           </div>
 
           {stats.chartData.length > 0 ? (
-            <section className="mb-8 rounded-lg border border-[#30363D] bg-[#161B22] p-6">
-              <h2 className="mb-4 text-sm font-semibold text-[#F0F6FC]">
+            <section className="mb-8 rounded-lg border border-neutral-800 bg-surface p-6">
+              <h2 className="mb-4 text-sm font-semibold text-ink">
                 Top Visitors by Messages Today
               </h2>
               <ResponsiveContainer width="100%" height={260}>
                 <BarChart data={stats.chartData} margin={{ top: 4, right: 8, left: 0, bottom: 4 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#30363D" />
-                  <XAxis dataKey="label" tick={{ fill: '#8B949E', fontSize: 11 }} axisLine={{ stroke: '#30363D' }} tickLine={false} />
-                  <YAxis allowDecimals={false} tick={{ fill: '#8B949E', fontSize: 11 }} axisLine={false} tickLine={false} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#3f424d" />
+                  <XAxis dataKey="label" tick={{ fill: '#9397ab', fontSize: 11 }} axisLine={{ stroke: '#3f424d' }} tickLine={false} />
+                  <YAxis allowDecimals={false} tick={{ fill: '#9397ab', fontSize: 11 }} axisLine={false} tickLine={false} />
                   <Tooltip
-                    contentStyle={{ background: '#161B22', border: '1px solid #30363D', borderRadius: 8 }}
-                    labelStyle={{ color: '#F0F6FC', fontSize: 12 }}
-                    itemStyle={{ color: '#8B949E', fontSize: 12 }}
+                    contentStyle={{ background: '#232532', border: '1px solid #3f424d', borderRadius: 8 }}
+                    labelStyle={{ color: '#e9e9ed', fontSize: 12 }}
+                    itemStyle={{ color: '#9397ab', fontSize: 12 }}
                   />
-                  <Bar dataKey="messages" fill="#2F81F7" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="messages" fill="#9184d9" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </section>
           ) : (
-            <section className="mb-8 rounded-lg border border-[#30363D] bg-[#161B22] p-6">
-              <p className="text-sm text-[#8B949E]">No visitor activity today yet.</p>
+            <section className="mb-8 rounded-lg border border-neutral-800 bg-surface p-6">
+              <p className="text-sm text-neutral-500">No visitor activity today yet.</p>
             </section>
           )}
         </>
       )}
 
       {/* Visitors Table */}
-      <section className="rounded-lg border border-[#30363D] bg-[#161B22] p-6">
-        <h2 className="mb-4 text-sm font-semibold text-[#F0F6FC]">Visitors</h2>
+      <section className="rounded-lg border border-neutral-800 bg-surface p-6">
+        <h2 className="mb-4 text-sm font-semibold text-ink">Visitors</h2>
 
         {visitorsLoading && (
-          <p className="text-sm text-[#8B949E]">Loading visitors…</p>
+          <p className="text-sm text-neutral-500">Loading visitors…</p>
         )}
 
         {!visitorsLoading && visitors.length === 0 && (
-          <p className="text-sm text-[#8B949E]">No visitors yet.</p>
+          <p className="text-sm text-neutral-500">No visitors yet.</p>
         )}
 
         {!visitorsLoading && visitors.length > 0 && (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead>
-                <tr className="border-b border-[#30363D]">
-                  <th className="pb-3 pr-4 text-xs font-medium uppercase tracking-wide text-[#8B949E]">Visitor ID</th>
-                  <th className="pb-3 pr-4 text-xs font-medium uppercase tracking-wide text-[#8B949E]">Enrolled</th>
-                  <th className="pb-3 pr-4 text-xs font-medium uppercase tracking-wide text-[#8B949E]">Requests Today</th>
-                  <th className="pb-3 pr-4 text-xs font-medium uppercase tracking-wide text-[#8B949E]">Tokens Today</th>
-                  <th className="pb-3 pr-4 text-xs font-medium uppercase tracking-wide text-[#8B949E]">Last Reset</th>
-                  <th className="pb-3 text-xs font-medium uppercase tracking-wide text-[#8B949E]">Actions</th>
+                <tr className="border-b border-neutral-800">
+                  <th className="pb-3 pr-4 text-xs font-medium uppercase tracking-wide text-neutral-500">Visitor ID</th>
+                  <th className="pb-3 pr-4 text-xs font-medium uppercase tracking-wide text-neutral-500">Enrolled</th>
+                  <th className="pb-3 pr-4 text-xs font-medium uppercase tracking-wide text-neutral-500">Requests Today</th>
+                  <th className="pb-3 pr-4 text-xs font-medium uppercase tracking-wide text-neutral-500">Tokens Today</th>
+                  <th className="pb-3 pr-4 text-xs font-medium uppercase tracking-wide text-neutral-500">Last Reset</th>
+                  <th className="pb-3 text-xs font-medium uppercase tracking-wide text-neutral-500">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {visitors.map((visitor) => (
-                  <tr key={visitor.visitorId} className="border-b border-[#30363D] last:border-0">
-                    <td className="py-3 pr-4 font-mono text-xs text-[#F0F6FC]">
+                  <tr key={visitor.visitorId} className="border-b border-neutral-800 last:border-0">
+                    <td className="py-3 pr-4 font-mono text-xs text-ink">
                       …{visitor.visitorId.slice(-8)}
                     </td>
-                    <td className="py-3 pr-4 text-[#8B949E]">
+                    <td className="py-3 pr-4 text-neutral-500">
                       {new Date(visitor.enrolledAt).toLocaleDateString()}
                     </td>
-                    <td className="py-3 pr-4 text-[#F0F6FC]">
+                    <td className="py-3 pr-4 text-ink">
                       {visitor.dailyRequests.toLocaleString()}
                     </td>
-                    <td className="py-3 pr-4 text-[#F0F6FC]">
+                    <td className="py-3 pr-4 text-ink">
                       {visitor.dailyTokens.toLocaleString()}
                     </td>
-                    <td className="py-3 pr-4 text-[#8B949E]">
+                    <td className="py-3 pr-4 text-neutral-500">
                       {new Date(visitor.lastResetAt).toLocaleDateString()}
                     </td>
                     <td className="py-3">
@@ -221,7 +221,7 @@ export default function AdminPanelPage() {
                         type="button"
                         disabled={resetting.has(visitor.visitorId)}
                         onClick={() => { void handleReset(visitor.visitorId); }}
-                        className="rounded-md border border-[#30363D] px-3 py-1 text-xs font-medium text-[#8B949E] transition-colors hover:border-red-500 hover:text-red-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-[#161B22] disabled:cursor-not-allowed disabled:opacity-40"
+                        className="rounded-md border border-neutral-800 px-3 py-1 text-xs font-medium text-neutral-500 transition-colors hover:border-red-500 hover:text-red-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-surface disabled:cursor-not-allowed disabled:opacity-40"
                       >
                         {resetting.has(visitor.visitorId) ? 'Resetting…' : 'Reset'}
                       </button>

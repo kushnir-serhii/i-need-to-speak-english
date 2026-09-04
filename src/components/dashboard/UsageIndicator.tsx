@@ -13,9 +13,9 @@ export function UsageIndicator(): React.ReactElement {
   const isByoKey = apiKey !== '';
 
   return (
-    <section className="rounded-lg border border-[#30363D] bg-[#161B22] p-6">
-      <h2 className="mb-1 text-base font-semibold text-[#F0F6FC]">Usage</h2>
-      <p className="text-sm text-[#8B949E]">
+    <section className="rounded-lg border border-neutral-800 bg-surface p-6">
+      <h2 className="mb-1 text-base font-semibold text-ink">Usage</h2>
+      <p className="text-sm text-neutral-500">
         {isByoKey
           ? `${sessionTokens.toLocaleString('en-US')} tokens used`
           : `${dailyRequests} / ${dailyRequestLimit} messages today`}

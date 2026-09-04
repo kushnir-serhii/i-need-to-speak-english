@@ -16,7 +16,7 @@ export function ConfirmModal() {
   const confirmClass =
     modal.variant === 'danger'
       ? 'bg-[#DA3633] hover:bg-red-600 text-white'
-      : 'bg-[#2F81F7] hover:bg-blue-500 text-white';
+      : 'bg-accent hover:bg-accent-400 text-white';
 
   return (
     <div
@@ -24,7 +24,7 @@ export function ConfirmModal() {
       onClick={closeModal}
     >
       <div
-        className="bg-[#161B22] rounded-xl max-w-sm w-full mx-4 p-6"
+        className="bg-surface rounded-xl max-w-sm w-full mx-4 p-6"
         onClick={(e) => e.stopPropagation()}
       >
         <h2 className="text-lg font-semibold text-white mb-2">{modal.title}</h2>

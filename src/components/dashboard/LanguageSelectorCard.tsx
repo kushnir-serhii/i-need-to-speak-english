@@ -73,9 +73,9 @@ export function LanguageSelectorCard(): ReactElement {
   );
 
   return (
-    <section className="mb-8 rounded-lg border border-[#30363D] bg-[#161B22] p-6">
-      <h2 className="mb-1 text-base font-semibold text-[#F0F6FC]">Language</h2>
-      <p className="mb-4 text-sm text-[#8B949E]">
+    <section className="mb-8 rounded-lg border border-neutral-800 bg-surface p-6">
+      <h2 className="mb-1 text-base font-semibold text-ink">Language</h2>
+      <p className="mb-4 text-sm text-neutral-500">
         Choose the language you want to practise.
       </p>
 
@@ -88,17 +88,17 @@ export function LanguageSelectorCard(): ReactElement {
           onBlur={handleClose}
           placeholder="Search language…"
           disabled={isSaving}
-          className="w-full rounded-md border border-[#30363D] bg-[#0D1117] px-3 py-2 text-sm text-[#F0F6FC] placeholder-[#8B949E] outline-none focus:border-[#2F81F7] focus:ring-1 focus:ring-[#2F81F7] disabled:cursor-not-allowed disabled:opacity-50"
+          className="w-full rounded-md border border-neutral-800 bg-bg px-3 py-2 text-sm text-ink placeholder-neutral-500 outline-none focus:border-accent focus:ring-1 focus:ring-accent disabled:cursor-not-allowed disabled:opacity-50"
         />
 
         {isSaving && (
-          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#8B949E]">
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-neutral-500">
             Saving…
           </span>
         )}
 
         {isOpen && filteredLanguages.length > 0 && (
-          <ul className="absolute z-10 mt-1 max-h-48 w-full overflow-y-auto rounded-md border border-[#30363D] bg-[#161B22] py-1 shadow-lg">
+          <ul className="absolute z-10 mt-1 max-h-48 w-full overflow-y-auto rounded-md border border-neutral-800 bg-surface py-1 shadow-lg">
             {filteredLanguages.map((lang) => (
               <li key={lang}>
                 <button
@@ -107,10 +107,10 @@ export function LanguageSelectorCard(): ReactElement {
                     e.preventDefault();
                     void handleSelect(lang);
                   }}
-                  className={`w-full px-3 py-2 text-left text-sm hover:bg-[#21262D] ${
+                  className={`w-full px-3 py-2 text-left text-sm hover:bg-neutral-900 ${
                     lang === targetLanguage
-                      ? 'font-semibold text-[#2F81F7]'
-                      : 'text-[#F0F6FC]'
+                      ? 'font-semibold text-accent'
+                      : 'text-ink'
                   }`}
                 >
                   {lang}

@@ -9,11 +9,11 @@ export default function PromptCard() {
   const setUseCustomPrompt = useSettingsStore((s) => s.setUseCustomPrompt);
 
   return (
-    <section className="rounded-lg border border-[#30363D] bg-[#161B22] p-6">
-      <h2 className="mb-1 text-base font-semibold text-[#F0F6FC]">
+    <section className="rounded-lg border border-neutral-800 bg-surface p-6">
+      <h2 className="mb-1 text-base font-semibold text-ink">
         AI Instruction
       </h2>
-      <p className="mb-4 text-sm text-[#8B949E]">
+      <p className="mb-4 text-sm text-neutral-500">
         Use the default system prompt or write your own custom instruction for
         the AI.
       </p>
@@ -23,10 +23,10 @@ export default function PromptCard() {
         <button
           type="button"
           onClick={() => setUseCustomPrompt(false)}
-          className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-[#2F81F7] focus:ring-offset-2 focus:ring-offset-[#161B22] ${
+          className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-surface ${
             !useCustomPrompt
-              ? 'bg-[#2F81F7] text-white'
-              : 'border border-[#30363D] text-[#8B949E] hover:border-[#8B949E] hover:text-[#F0F6FC]'
+              ? 'bg-accent text-white'
+              : 'border border-neutral-800 text-neutral-500 hover:border-[#9397ab] hover:text-ink'
           }`}
         >
           Default
@@ -34,10 +34,10 @@ export default function PromptCard() {
         <button
           type="button"
           onClick={() => setUseCustomPrompt(true)}
-          className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-[#2F81F7] focus:ring-offset-2 focus:ring-offset-[#161B22] ${
+          className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-surface ${
             useCustomPrompt
-              ? 'bg-[#2F81F7] text-white'
-              : 'border border-[#30363D] text-[#8B949E] hover:border-[#8B949E] hover:text-[#F0F6FC]'
+              ? 'bg-accent text-white'
+              : 'border border-neutral-800 text-neutral-500 hover:border-[#9397ab] hover:text-ink'
           }`}
         >
           Custom
@@ -51,7 +51,7 @@ export default function PromptCard() {
         disabled={!useCustomPrompt}
         placeholder="Write a custom instruction for the AI (e.g. Respond only in formal English and correct my grammar after each reply)"
         rows={4}
-        className={`w-full resize-y rounded-md border border-[#30363D] bg-[#0D1117] px-3 py-2 text-sm text-[#F0F6FC] placeholder-[#8B949E] outline-none transition-opacity focus:border-[#2F81F7] focus:ring-1 focus:ring-[#2F81F7] ${
+        className={`w-full resize-y rounded-md border border-neutral-800 bg-bg px-3 py-2 text-sm text-ink placeholder-neutral-500 outline-none transition-opacity focus:border-accent focus:ring-1 focus:ring-accent ${
           !useCustomPrompt ? 'cursor-not-allowed opacity-50' : 'opacity-100'
         }`}
       />

@@ -21,7 +21,63 @@
 
   html,
   body {
-    @apply bg-bg-main relative z-1 min-h-screen font-[--font-urbanist] dark:bg-[#0A0F1A];
+    @apply bg-bg-main relative z-1 min-h-screen font-[--font-inter] dark:bg-[#0f111c];
+  }
+
+}
+
+@layer utilities {
+
+  @keyframes intse-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes intse-slide-in-right {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+  }
+
+  /* design doc: the concentric rings behind the voice mascot */
+  @keyframes intse-pulse-ring {
+    0% { transform: scale(0.9); opacity: 0.55; }
+    100% { transform: scale(1.35); opacity: 0; }
+  }
+
+  /* design doc: the three typing dots */
+  @keyframes intse-blink {
+    0%, 60%, 100% { opacity: 0.25; }
+    30% { opacity: 1; }
+  }
+
+  @keyframes intse-message-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-fade-in {
+    animation: intse-fade-in 0.15s ease-out;
+  }
+
+  .animate-slide-in-right {
+    animation: intse-slide-in-right 0.2s ease-out;
+  }
+
+  .animate-pulse-ring {
+    animation: intse-pulse-ring 2.8s ease-out infinite;
+  }
+
+  .animate-message-in {
+    animation: intse-message-in 0.22s ease-out;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-pulse-ring,
+    .animate-message-in,
+    .animate-fade-in,
+    .animate-slide-in-right {
+      animation: none;
+    }
   }
 
 }

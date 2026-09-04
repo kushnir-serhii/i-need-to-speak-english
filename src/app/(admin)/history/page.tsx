@@ -180,9 +180,9 @@ export default function HistoryPage() {
   }, [visitorId]);
 
   return (
-    <div className="flex flex-1 flex-col overflow-y-auto bg-[#0D1117] px-4 py-8 sm:px-8">
+    <div className="flex flex-1 flex-col overflow-y-auto bg-bg px-4 py-8 sm:px-8">
       <div className="mb-8 flex items-center justify-between gap-4">
-        <h1 className="font-[--font-inter] text-2xl font-bold text-[#F0F6FC]">
+        <h1 className="font-[--font-inter] text-2xl font-bold text-ink">
           History
         </h1>
         {sessions.length > 0 && (
@@ -196,13 +196,13 @@ export default function HistoryPage() {
       </div>
 
       {loading && (
-        <p className="text-sm text-[#8B949E]">Loading…</p>
+        <p className="text-sm text-neutral-500">Loading…</p>
       )}
 
       {!loading && sessions.length === 0 && (
         <div className="flex flex-col items-center justify-center gap-3 py-20 text-center">
-          <p className="text-[#8B949E] text-sm">No conversations yet.</p>
-          <p className="text-[#8B949E] text-xs">Start a chat and your sessions will appear here.</p>
+          <p className="text-neutral-500 text-sm">No conversations yet.</p>
+          <p className="text-neutral-500 text-xs">Start a chat and your sessions will appear here.</p>
         </div>
       )}
 
@@ -216,14 +216,14 @@ export default function HistoryPage() {
                 {/* Session card */}
                 <div
                   onClick={() => void toggleSession(session.sessionId)}
-                  className="cursor-pointer rounded-lg border border-[#30363D] bg-[#161B22] p-4 transition-colors hover:border-[#2F81F7]/50"
+                  className="cursor-pointer rounded-lg border border-neutral-800 bg-surface p-4 transition-colors hover:border-accent/50"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1 min-w-0">
-                      <p className="truncate text-sm text-[#F0F6FC]">
+                      <p className="truncate text-sm text-ink">
                         {session.preview || '(empty)'}
                       </p>
-                      <p className="mt-1 text-xs text-[#8B949E]">
+                      <p className="mt-1 text-xs text-neutral-500">
                         {formatDate(session.updatedAt)} · {session.messageCount} message{session.messageCount !== 1 ? 's' : ''}
                       </p>
                     </div>
@@ -231,7 +231,7 @@ export default function HistoryPage() {
                       <button
                         onClick={(e) => handleContinue(e, session.sessionId)}
                         disabled={isContinuing}
-                        className="rounded px-2 py-1 text-xs font-medium text-[#2F81F7] border border-[#2F81F7]/40 hover:bg-[#2F81F7]/10 transition-colors disabled:opacity-40"
+                        className="rounded px-2 py-1 text-xs font-medium text-accent border border-accent/40 hover:bg-accent/10 transition-colors disabled:opacity-40"
                         aria-label="Continue this conversation"
                       >
                         {isContinuing ? 'Loading…' : 'Continue'}
@@ -239,7 +239,7 @@ export default function HistoryPage() {
                       <button
                         onClick={(e) => void deleteSession(e, session.sessionId)}
                         disabled={deletingId === session.sessionId}
-                        className="rounded p-1 text-[#8B949E] hover:text-red-400 transition-colors disabled:opacity-40"
+                        className="rounded p-1 text-neutral-500 hover:text-red-400 transition-colors disabled:opacity-40"
                         aria-label="Delete session"
                       >
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -258,7 +258,7 @@ export default function HistoryPage() {
                         strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        className={`text-[#8B949E] transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+                        className={`text-neutral-500 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
                       >
                         <polyline points="6 9 12 15 18 9" />
                       </svg>
@@ -268,20 +268,20 @@ export default function HistoryPage() {
 
                 {/* Expanded messages */}
                 {isExpanded && (
-                  <div className="mt-1 rounded-lg border border-[#30363D] bg-[#0D1117] p-4">
+                  <div className="mt-1 rounded-lg border border-neutral-800 bg-bg p-4">
                     {loadingSession ? (
-                      <p className="text-xs text-[#8B949E]">Loading messages…</p>
+                      <p className="text-xs text-neutral-500">Loading messages…</p>
                     ) : expandedMessages.length === 0 ? (
-                      <p className="text-xs text-[#8B949E]">No messages.</p>
+                      <p className="text-xs text-neutral-500">No messages.</p>
                     ) : (
                       <div className="flex flex-col gap-2">
                         {expandedMessages.map((msg, i) => (
                           <div
                             key={i}
-                            className={`max-w-[80%] rounded-xl px-3 py-2 text-sm text-white whitespace-pre-wrap ${
+                            className={`max-w-[80%] rounded-xl px-3 py-2 text-sm text-ink whitespace-pre-wrap ${
                               msg.role === 'user'
-                                ? 'ml-auto bg-[#2F81F7] rounded-br-sm'
-                                : 'mr-auto bg-[#161B22] border border-[#30363D] rounded-bl-sm'
+                                ? 'ml-auto bg-accent rounded-br-sm'
+                                : 'mr-auto bg-surface border border-neutral-800 rounded-bl-sm'
                             }`}
                           >
                             {msg.content}
@@ -299,9 +299,9 @@ export default function HistoryPage() {
 
       {/* Clear all history dialog */}
       {clearAllDialog && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-          <div className="w-full max-w-sm rounded-xl border border-[#30363D] bg-[#161B22] p-6 shadow-2xl">
-            <p className="mb-4 text-sm text-[#F0F6FC]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-neutral-900/50 px-4">
+          <div className="w-full max-w-sm rounded-xl border border-neutral-800 bg-surface p-6 shadow-2xl">
+            <p className="mb-4 text-sm text-ink">
               Delete all {sessions.length} conversation{sessions.length !== 1 ? 's' : ''}? This cannot be undone.
             </p>
             <div className="flex flex-col gap-2">
@@ -315,7 +315,7 @@ export default function HistoryPage() {
               <button
                 onClick={() => setClearAllDialog(false)}
                 disabled={clearingAll}
-                className="w-full rounded-lg px-4 py-2 text-sm text-[#8B949E] hover:text-[#F0F6FC] transition-colors disabled:opacity-40"
+                className="w-full rounded-lg px-4 py-2 text-sm text-neutral-500 hover:text-ink transition-colors disabled:opacity-40"
               >
                 Cancel
               </button>
@@ -326,27 +326,27 @@ export default function HistoryPage() {
 
       {/* Save/Discard/Cancel dialog */}
       {confirmDialog !== null && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-          <div className="w-full max-w-sm rounded-xl border border-[#30363D] bg-[#161B22] p-6 shadow-2xl">
-            <p className="mb-4 text-sm text-[#F0F6FC]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-neutral-900/50 px-4">
+          <div className="w-full max-w-sm rounded-xl border border-neutral-800 bg-surface p-6 shadow-2xl">
+            <p className="mb-4 text-sm text-ink">
               You have an unsaved conversation. Save it before opening this one?
             </p>
             <div className="flex flex-col gap-2">
               <button
                 onClick={() => void handleDialogSave()}
-                className="w-full rounded-lg bg-[#2F81F7] px-4 py-2 text-sm font-medium text-white hover:bg-[#388bfd] transition-colors"
+                className="w-full rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-600 transition-colors"
               >
                 Save
               </button>
               <button
                 onClick={() => void handleDialogDiscard()}
-                className="w-full rounded-lg border border-[#30363D] px-4 py-2 text-sm font-medium text-[#F0F6FC] hover:bg-[#21262D] transition-colors"
+                className="w-full rounded-lg border border-neutral-800 px-4 py-2 text-sm font-medium text-ink hover:bg-neutral-900 transition-colors"
               >
                 Discard
               </button>
               <button
                 onClick={handleDialogCancel}
-                className="w-full rounded-lg px-4 py-2 text-sm text-[#8B949E] hover:text-[#F0F6FC] transition-colors"
+                className="w-full rounded-lg px-4 py-2 text-sm text-neutral-500 hover:text-ink transition-colors"
               >
                 Cancel
               </button>

@@ -67,18 +67,18 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-[#0D1117]">
-      <div className="w-full max-w-sm rounded-xl border border-[#30363D] bg-[#161B22] p-8">
+    <div className="fixed inset-0 flex items-center justify-center bg-bg">
+      <div className="w-full max-w-sm rounded-xl border border-neutral-800 bg-surface p-8">
 
         {/* Tab switcher */}
-        <div className="mb-6 flex rounded-lg border border-[#30363D] p-0.5">
+        <div className="mb-6 flex rounded-lg border border-neutral-800 p-0.5">
           <button
             type="button"
             onClick={() => switchMode('login')}
             className={`flex-1 rounded-md py-1.5 text-sm font-medium transition-colors ${
               mode === 'login'
-                ? 'bg-[#2F81F7] text-white'
-                : 'text-[#8B949E] hover:text-[#F0F6FC]'
+                ? 'bg-accent text-white'
+                : 'text-neutral-500 hover:text-ink'
             }`}
           >
             Sign in
@@ -88,8 +88,8 @@ export default function LoginPage() {
             onClick={() => switchMode('register')}
             className={`flex-1 rounded-md py-1.5 text-sm font-medium transition-colors ${
               mode === 'register'
-                ? 'bg-[#2F81F7] text-white'
-                : 'text-[#8B949E] hover:text-[#F0F6FC]'
+                ? 'bg-accent text-white'
+                : 'text-neutral-500 hover:text-ink'
             }`}
           >
             Register
@@ -98,7 +98,7 @@ export default function LoginPage() {
 
         <form onSubmit={(e) => void handleSubmit(e)} className="flex flex-col gap-4">
           <div>
-            <label htmlFor="username" className="mb-1.5 block text-sm font-medium text-[#F0F6FC]">
+            <label htmlFor="username" className="mb-1.5 block text-sm font-medium text-ink">
               Username
             </label>
             <input
@@ -108,13 +108,13 @@ export default function LoginPage() {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
-              className="w-full rounded-md border border-[#30363D] bg-[#0D1117] px-3 py-2 text-sm text-[#F0F6FC] placeholder-[#8B949E] outline-none focus:border-[#2F81F7] focus:ring-1 focus:ring-[#2F81F7]"
+              className="w-full rounded-md border border-neutral-800 bg-bg px-3 py-2 text-sm text-ink placeholder-neutral-500 outline-none focus:border-accent focus:ring-1 focus:ring-accent"
             />
           </div>
 
           <div>
-            <label htmlFor="password" className="mb-1.5 block text-sm font-medium text-[#F0F6FC]">
-              Password{mode === 'register' && <span className="ml-1 text-[#8B949E]">(min 8 chars)</span>}
+            <label htmlFor="password" className="mb-1.5 block text-sm font-medium text-ink">
+              Password{mode === 'register' && <span className="ml-1 text-neutral-500">(min 8 chars)</span>}
             </label>
             <div className="relative">
               <input
@@ -125,12 +125,12 @@ export default function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 minLength={mode === 'register' ? 8 : undefined}
-                className="w-full rounded-md border border-[#30363D] bg-[#0D1117] px-3 py-2 pr-10 text-sm text-[#F0F6FC] placeholder-[#8B949E] outline-none focus:border-[#2F81F7] focus:ring-1 focus:ring-[#2F81F7]"
+                className="w-full rounded-md border border-neutral-800 bg-bg px-3 py-2 pr-10 text-sm text-ink placeholder-neutral-500 outline-none focus:border-accent focus:ring-1 focus:ring-accent"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword((v) => !v)}
-                className="absolute inset-y-0 right-0 flex items-center px-3 text-[#8B949E] hover:text-[#F0F6FC] transition-colors"
+                className="absolute inset-y-0 right-0 flex items-center px-3 text-neutral-500 hover:text-ink transition-colors"
                 aria-label={showPassword ? 'Hide password' : 'Show password'}
               >
                 {showPassword ? <RiEyeOffLine size={16} /> : <RiEyeLine size={16} />}
@@ -143,7 +143,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="mt-2 rounded-md bg-[#2F81F7] px-4 py-2 text-sm font-medium text-white hover:bg-[#2F81F7]/80 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="mt-2 rounded-md bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent/80 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {loading
               ? mode === 'login' ? 'Signing in…' : 'Creating account…'
