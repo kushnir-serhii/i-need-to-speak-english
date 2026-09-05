@@ -6,6 +6,7 @@ import {
   PiPaperPlaneRightFill,
   PiSlidersHorizontalBold,
   PiRepeatBold,
+  PiArrowCounterClockwiseBold,
 } from 'react-icons/pi';
 import { useChatStore } from '@/store/useChatStore';
 import { useUserStore } from '@/store/useUserStore';
@@ -50,20 +51,57 @@ export function ChatInput({
   const hasMessages = useChatStore((s) => s.messages.length > 0);
   const autoDialogActive = useChatStore((s) => s.autoDialogActive);
   const setAutoDialogActive = useChatStore((s) => s.setAutoDialogActive);
+  const speakingMessageId = useChatStore((s) => s.speakingMessageId);
 
   const apiKey = useSettingsStore((s) => s.apiKey);
   const dailyRequests = useUserStore((s) => s.dailyRequests);
   const dailyRequestLimit = useUserStore((s) => s.dailyRequestLimit);
   const messagesLeft = Math.max(0, dailyRequestLimit - dailyRequests);
+  const role = useUserStore((s) => s.role);
+  const visitorId = useUserStore((s) => s.visitorId);
+  const [resettingLimit, setResettingLimit] = useState(false);
+
+  const handleResetLimit = useCallback(async () => {
+    if (!visitorId) return;
+    setResettingLimit(true);
+    try {
+      const r = await fetch(`/api/admin/visitors/${visitorId}/reset`, { method: 'POST' });
+      if (!r.ok) {
+        toast('error', 'Reset failed.');
+        return;
+      }
+      const data = (await r.json()) as { dailyRequests: number };
+      useUserStore.getState().updateStats(
+        useUserStore.getState().visitorCount,
+        useUserStore.getState().dailyCap,
+        data.dailyRequests,
+        useUserStore.getState().dailyRequestLimit,
+      );
+      toast('info', 'Daily limit reset.');
+    } catch {
+      toast('error', 'Reset failed.');
+    } finally {
+      setResettingLimit(false);
+    }
+  }, [visitorId, toast]);
 
   const lang = langToSpeechCode(useSettingsStore.getState().targetLanguage);
-  const { isListening, isSupported, startListening } = useSpeechToText({
+  const { isListening, isSupported, startListening, stopListening } = useSpeechToText({
     lang,
     onInterimResult: (transcript) => setInputValue(transcript),
     onFinalResult: (transcript) => {
       setInputValue(transcript);
       if (useChatStore.getState().autoDialogActive) {
-        setTimeout(() => void handleSubmit(transcript), 0);
+        if (transcript.trim() !== '') {
+          // Mark streaming synchronously so the re-arm effect below doesn't
+          // see a gap between "stopped listening" and "started streaming"
+          // and fire the mic back on before the reply has even started.
+          useChatStore.getState().setStreaming(true);
+          setTimeout(() => void handleSubmit(transcript), 0);
+        } else {
+          // Nothing was said — go straight back to listening.
+          setTimeout(() => startListening(), 0);
+        }
       }
     },
     onError: (errorCode) => {
@@ -101,12 +139,16 @@ export function ChatInput({
     }
   }, [seedText]);
 
-  // Hands-free: when auto-dialog is switched on anywhere (e.g. the Talk
-  // tab), start the mic; stopping it is handled by the recogniser ending.
+  // Hands-free: (re)start the mic whenever auto-dialog is on and we're not
+  // currently listening, streaming a reply, or playing one back via TTS.
+  // This re-arms after every turn, not just when auto-dialog first flips on.
   useEffect(() => {
-    if (autoDialogActive && !isListening) startListening();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [autoDialogActive]);
+    if (autoDialogActive && !isListening && !isStreaming && speakingMessageId === null) {
+      startListening();
+    } else if (!autoDialogActive && isListening) {
+      stopListening();
+    }
+  }, [autoDialogActive, isListening, isStreaming, speakingMessageId, startListening, stopListening]);
 
   const handleSubmit = useCallback(
     async (overrideValue?: string) => {
@@ -324,11 +366,7 @@ export function ChatInput({
                 aria-label="Auto dialog"
                 aria-pressed={autoDialogActive}
                 disabled={controlsDisabled}
-                onClick={() => {
-                  const next = !autoDialogActive;
-                  setAutoDialogActive(next);
-                  if (next) startListening();
-                }}
+                onClick={() => setAutoDialogActive(!autoDialogActive)}
                 className={`flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-xs transition-colors disabled:opacity-40 ${
                   autoDialogActive
                     ? 'bg-accent/12 text-accent-200'
@@ -339,6 +377,20 @@ export function ChatInput({
                 Auto
               </button>
               <span className="flex-1" />
+              {role === 'admin' && (
+                <button
+                  type="button"
+                  aria-label="Reset daily limit"
+                  disabled={resettingLimit}
+                  onClick={() => void handleResetLimit()}
+                  className="hover:text-accent-300 grid h-8 w-8 place-items-center rounded-lg text-neutral-500 transition-colors disabled:opacity-40"
+                  title="Reset daily limit (owner)"
+                >
+                  <PiArrowCounterClockwiseBold
+                    className={`text-[15px] ${resettingLimit ? 'animate-spin' : ''}`}
+                  />
+                </button>
+              )}
               {inputValue.length > 0 ? (
                 <CharCounter count={inputValue.length} />
               ) : apiKey === '' ? (
